@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit User - Seafoodie{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body {
+        background: linear-gradient(135deg, #093839, #208396);
+        min-height: 100vh;
+    }
+
+    .page-card {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 35px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        max-width: 600px;
+        margin: auto;
+    }
+
+    .form-control,
+    .form-select {
+        height: 45px;
+        border-radius: 8px;
+    }
+
+    .btn-teal {
+        background-color: #1f7a8c;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 8px;
+    }
+
+    .btn-teal:hover {
+        background-color: #16636f;
+        color: #fff;
+    }
+
+    .role-box {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 15px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="page-card">
+
+        <h2 class="mb-4">Edit User</h2>
+
+        {{ form_start(form) }}
+
+        <!-- Full Name -->
+        <div class="mb-3">
+            {{ form_label(form.name, 'Full Name') }}
+            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.name) }}
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+            {{ form_label(form.email, 'Email Address') }}
+            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.email) }}
+        </div>
+
+        <!-- Roles -->
+        <div class="mb-3">
+            <label class="form-label">Role</label>
+            <div class="role-box">
+                {{ form_widget(form.roles) }}
+            </div>
+            {{ form_errors(form.roles) }}
+        </div>
+
+        <!-- Active -->
+        <div class="form-check mb-4">
+            {{ form_widget(form.isActive, {'attr': {'class': 'form-check-input'}}) }}
+            {{ form_label(form.isActive, 'Active', {'label_attr': {'class': 'form-check-label'}}) }}
+            {{ form_errors(form.isActive) }}
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-teal">
+                Save Changes
+            </button>
+            <a href="{{ path('app_user_index') }}" class="btn btn-outline-secondary">
+                Cancel
+            </a>
+        </div>
+
+        {{ form_end(form) }}
+
+    </div>
+</div>
+{% endblock %}

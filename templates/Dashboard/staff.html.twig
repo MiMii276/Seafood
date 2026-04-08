@@ -1,0 +1,142 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Staff Dashboard - Seafoodie{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body {
+        background: linear-gradient(135deg, #093839, #208396);
+        min-height: 100vh;
+    }
+
+    .dashboard-card {
+        border-radius: 12px;
+        padding: 20px;
+        color: #fff;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .table-actions form {
+        display: inline-block;
+    }
+
+    .table-actions .btn {
+        margin-right: 5px;
+        margin-bottom: 2px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+
+    <h1 class="mb-4 text-center">Staff Dashboard</h1>
+
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="dashboard-card bg-info">
+                <h5>My Products</h5>
+                <h2>{{ my_products_count }}</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="dashboard-card bg-warning text-dark">
+                <h5>My Catering Packages</h5>
+                <h2>{{ my_caterings_count }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRODUCTS TABLE -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">My Products</h5>
+            <a href="{{ path('app_product_new') }}" class="btn btn-sm btn-primary">Add Product</a>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Created</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in my_products %}
+                        <tr>
+                            <td>{{ product.name }}</td>
+                            <td>₱{{ product.price|number_format(2, '.', ',') }}</td>
+                            <td>{{ product.stock }}</td>
+                            <td>{{ product.createdAt|date('Y-m-d') }}</td>
+                            <td class="table-actions text-center">
+                                <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-sm btn-info">View</a>
+                                <a href="{{ path('app_product_edit', {'id': product.id}) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <form method="post" action="{{ path('app_product_delete', {'id': product.id}) }}" 
+                                      onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">No products yet</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- CATERINGS TABLE -->
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">My Catering Packages</h5>
+            <a href="{{ path('app_catering_new') }}" class="btn btn-sm btn-primary">Add Catering</a>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Event Date</th>
+                        <th>Guests</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for catering in my_caterings %}
+                        <tr>
+                            <td>{{ catering.name }}</td>
+                            <td>{{ catering.eventDate|date('M d, Y') }}</td>
+                            <td>{{ catering.numberOfGuests }}</td>
+                            <td>₱{{ catering.price|number_format(2, '.', ',') }}</td>
+                            <td>{{ catering.status }}</td>
+                            <td class="table-actions text-center">
+                                <a href="{{ path('app_catering_show', {'id': catering.id}) }}" class="btn btn-sm btn-info">View</a>
+                                <a href="{{ path('app_catering_edit', {'id': catering.id}) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <form method="post" action="{{ path('app_catering_delete', {'id': catering.id}) }}" 
+                                      onsubmit="return confirm('Are you sure you want to delete this catering package?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ catering.id) }}">
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">No catering packages yet</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

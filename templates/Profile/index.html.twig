@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Profile - Seafoodie{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body {
+        background: linear-gradient(135deg, #093839, #208396);
+        min-height: 100vh;
+    }
+
+    .page-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        max-width: 500px;
+        margin: 50px auto;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .profile-item {
+        margin-bottom: 15px;
+    }
+
+    .label {
+        font-weight: 500;
+        margin-right: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="page-card">
+
+        <h1>My Profile</h1>
+
+        <div class="profile-item">
+            <span class="label">Name:</span> {{ user.name }}
+        </div>
+
+        <div class="profile-item">
+            <span class="label">Email:</span> {{ user.email }}
+        </div>
+
+        <div class="profile-item">
+            <span class="label">Role:</span> {{ user.getRoleDisplay() }}
+        </div>
+
+        <div class="mt-4 text-center">
+            <a href="{{ path('app_user_edit', {id: user.id}) }}" class="btn btn-teal">Edit Profile</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

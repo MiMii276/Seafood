@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Activity Log - Seafoodie{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body {
+        background: linear-gradient(135deg, #093839, #208396);
+        min-height: 100vh;
+    }
+
+    .page-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-teal {
+        background-color: #1f7a8c;
+        color: #fff;
+    }
+
+    .btn-teal:hover {
+        background-color: #16636f;
+        color: #fff;
+    }
+
+    .badge-info {
+        background-color: #17a2b8;
+        color: #fff;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(31, 122, 140, 0.1);
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="page-card">
+
+        <h1 class="mb-4">Activity Log</h1>
+
+        <!-- Filters -->
+        <form method="get" class="row g-3 mb-4">
+            <div class="col-md-3">
+                <input type="text"
+                       name="user"
+                       value="{{ filter_user }}"
+                       class="form-control"
+                       placeholder="Filter by Username">
+            </div>
+
+            <div class="col-md-3">
+                <select name="action" class="form-select">
+                    <option value="">Filter by Action</option>
+                    <option value="login"  {{ filter_action == 'login'  ? 'selected' : '' }}>Login</option>
+                    <option value="logout" {{ filter_action == 'logout' ? 'selected' : '' }}>Logout</option>
+                    <option value="create" {{ filter_action == 'create' ? 'selected' : '' }}>Create</option>
+                    <option value="update" {{ filter_action == 'update' ? 'selected' : '' }}>Update</option>
+                    <option value="delete" {{ filter_action == 'delete' ? 'selected' : '' }}>Delete</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <input type="date"
+                       name="date"
+                       value="{{ filter_date }}"
+                       class="form-control">
+            </div>
+
+            <div class="col-md-3 d-grid">
+                <button class="btn btn-teal">Apply Filters</button>
+            </div>
+        </form>
+
+        <!-- Activity Log Table -->
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                        <th>Details</th>
+                        <th>Date & Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                        <tr>
+                            <td>{{ log.id }}</td>
+                            <td>{{ log.username }}</td>
+                            <td>{{ log.role }}</td>
+                            <td>
+                                <span class="badge bg-info text-dark">{{ log.action|capitalize }}</span>
+                            </td>
+                            <td>{{ log.targetData }}</td>
+                            <td>{{ log.createdAt|date('M d, Y - h:i A') }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                No activity logs found.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

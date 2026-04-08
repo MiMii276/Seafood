@@ -1,11 +1,22 @@
-# yaml-language-server: $schema=../vendor/symfony/routing/Loader/schema/routing.schema.json
+# Explicit routes
+app_login:
+    path: /login
+    controller: App\Controller\SecurityController::login
 
-# This file is the entry point to configure the routes of your app.
-# Methods with the #[Route] attribute are automatically imported.
-# See also https://symfony.com/doc/current/routing.html
+app_logout:
+    path: /logout
+    controller: App\Controller\SecurityController::logout
 
-# To list all registered routes, run the following command:
-#   bin/console debug:router
+app_dashboard:
+    path: /dashboard
+    controller: App\Controller\DashboardController::index
 
+# Load all controllers with PHP 8 attributes
 controllers:
-    resource: routing.controllers
+    resource: '../src/Controller/'
+    type: attribute
+
+# API routes
+api_login:
+    path: /api/login
+    methods: [POST]

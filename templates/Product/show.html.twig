@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Product Details - Seafoodie{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body {
+        background: linear-gradient(135deg, #093839, #208396);
+        min-height: 100vh;
+    }
+
+    .page-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-teal {
+        background-color: #1f7a8c;
+        color: #fff;
+    }
+
+    .btn-teal:hover {
+        background-color: #16636f;
+        color: #fff;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="page-card">
+
+        <h1 class="mb-4">Product Details</h1>
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <tr>
+                    <th>ID</th>
+                    <td>{{ product.id }}</td>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <td>{{ product.name }}</td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td>{{ product.description ?: '-' }}</td>
+                </tr>
+                <tr>
+                    <th>Price</th>
+                    <td>₱{{ product.price|number_format(2) }}</td>
+                </tr>
+                <tr>
+                    <th>Stock</th>
+                    <td>{{ product.stock }}</td>
+                </tr>
+                <tr>
+                    <th>Created By</th>
+                    <td>{{ product.createdBy ? product.createdBy.name : 'N/A' }}</td>
+                </tr>
+                <tr>
+                    <th>Created At</th>
+                    <td>{{ product.createdAt|date('M d, Y - h:i A') }}</td>
+                </tr>
+                <tr>
+                    <th>Updated At</th>
+                    <td>{{ product.updatedAt ? product.updatedAt|date('M d, Y - h:i A') : 'Never' }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <a href="{{ path('app_product_index') }}" class="btn btn-teal mt-3">
+            ← Back to Products
+        </a>
+
+    </div>
+</div>
+{% endblock %}

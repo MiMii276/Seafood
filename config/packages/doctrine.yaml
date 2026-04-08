@@ -32,6 +32,10 @@ when@test:
         dbal:
             # "TEST_TOKEN" is typically set by ParaTest
             dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+        connection:
+            driver: 'pdo_mysql'
+        options:
+            1002: "SET time_zone = '+08:00'"
 
 when@prod:
     doctrine:

@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create User - Seafoodie{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body {
+        background: linear-gradient(135deg, #093839, #208396);
+        min-height: 100vh;
+    }
+
+    .page-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        max-width: 500px;
+        margin: 50px auto;
+    }
+
+    .btn-teal {
+        background-color: #1f7a8c;
+        color: #fff;
+    }
+
+    .btn-teal:hover {
+        background-color: #16636f;
+        color: #fff;
+    }
+
+    .form-label {
+        font-weight: 500;
+    }
+
+    .form-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="page-card">
+
+        <h1 class="mb-4 text-center">Create New User</h1>
+
+        {{ form_start(form) }}
+
+        {# Loop through fields #}
+        {% for field in form %}
+            <div class="mb-3">
+                {{ form_label(field) }}
+                {% if field.vars.block_prefixes[1] == 'choice' %}
+                    {# Roles or other choice fields #}
+                    {{ form_widget(field, {'attr': {'class': 'form-select'}}) }}
+                {% else %}
+                    {{ form_widget(field, {'attr': {'class': 'form-control'}}) }}
+                {% endif %}
+                {{ form_errors(field) }}
+            </div>
+        {% endfor %}
+
+        <!-- Buttons -->
+        <div class="form-actions mt-3">
+            <button type="submit" class="btn btn-teal">Create User</button>
+            <a href="{{ path('app_user_index') }}" class="btn btn-secondary">Back to Users</a>
+        </div>
+
+        {{ form_end(form) }}
+
+    </div>
+</div>
+{% endblock %}

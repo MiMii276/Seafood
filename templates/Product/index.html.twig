@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Products - Seafoodie{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body {
+        background: linear-gradient(135deg, #093839, #208396);
+        min-height: 100vh;
+    }
+
+    .page-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-teal {
+        background-color: #1f7a8c;
+        color: #fff;
+    }
+
+    .btn-teal:hover {
+        background-color: #16636f;
+        color: #fff;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(31, 122, 140, 0.05);
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="page-card">
+
+        <h1 class="mb-4">Products</h1>
+
+        <!-- Top Controls: Create & Search -->
+        <div class="row mb-3">
+            <div class="col-md-6 mb-2">
+                <a href="{{ path('app_product_new') }}" class="btn btn-teal">+ Create New Product</a>
+            </div>
+            <div class="col-md-6">
+                <form method="get" class="d-flex">
+                    <input type="text" name="search" value="{{ app.request.get('search') }}" 
+                           class="form-control me-2" placeholder="Search by product name...">
+                    <button class="btn btn-teal">Search</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Products Table -->
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Created By</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td>{{ product.id }}</td>
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.description ?: '-' }}</td>
+                            <td>{{ product.price|number_format(2, '.', ',') }}</td>
+                            <td>{{ product.stock }}</td>
+                            <td>{{ product.createdBy.name }}</td>
+                            <td>{{ product.createdAt|date('M d, Y - h:i A') }}</td>
+                            <td>{{ product.updatedAt ? product.updatedAt|date('M d, Y - h:i A') : '-' }}</td>
+                            <td class="text-center">
+                                <div class="d-flex flex-wrap gap-1 justify-content-center">
+                                    <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-sm btn-info">View</a>
+
+                                    {% set canEdit = product.createdBy.id == app.user.id or is_granted('ROLE_ADMIN') %}
+                                    {% if canEdit %}
+                                        <a href="{{ path('app_product_edit', {'id': product.id}) }}" class="btn btn-sm btn-teal">Edit</a>
+
+                                        <form method="post" action="{{ path('app_product_delete', {'id': product.id}) }}" 
+                                              onsubmit="return confirm('⚠️ You are about to delete the product: {{ product.name }}. This action cannot be undone. Are you sure?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                                            <button class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
+                                    {% else %}
+                                        <span class="text-muted">No actions</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="9" class="text-center text-muted py-4">
+                                No products found.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

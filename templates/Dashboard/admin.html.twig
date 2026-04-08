@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block stylesheets %}
+<style>
+    /* Gradient background for the dashboard */
+    body {
+        background: linear-gradient(135deg, #208396, #093839);
+        min-height: 100vh;
+    }
+
+    /* Cards in white */
+    .card {
+        background-color: #fff !important;
+        color: #000;
+        border-radius: 12px;
+        box-shadow: 2px 2px 15px rgba(0,0,0,0.1);
+        margin-bottom: 1.5rem;
+    }
+
+    /* Card titles and numbers */
+    .card h2, .card h5 {
+        color: #000;
+    }
+
+    /* Gradient cards on top row can stay white but colored numbers */
+    .dashboard-card-number {
+        color: #208396;
+        font-weight: bold;
+    }
+
+    /* Buttons */
+    .btn-primary {
+        background-color: #208396;
+        border-color: #208396;
+        color: #fff;
+    }
+    .btn-primary:hover {
+        background-color: #093839;
+        border-color: #093839;
+    }
+
+    /* Table header */
+    table thead {
+        background-color: #208396;
+        color: #fff;
+    }
+
+    /* Table rows hover */
+    table tbody tr:hover {
+        background-color: #f1f7f8;
+    }
+
+    /* Badges */
+    .badge.bg-secondary {
+        background-color: #208396 !important;
+        color: #fff;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<h1 class="mb-4 text-white">Admin Dashboard</h1>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card shadow-hover">
+            <div class="card-body">
+                <h5 class="card-title">Total Users</h5>
+                <h2 class="dashboard-card-number">{{ total_users }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-hover">
+            <div class="card-body">
+                <h5 class="card-title">Total Staff</h5>
+                <h2 class="dashboard-card-number">{{ total_staff }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-hover">
+            <div class="card-body">
+                <h5 class="card-title">Total Products</h5>
+                <h2 class="dashboard-card-number">{{ total_products }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-hover">
+            <div class="card-body">
+                <h5 class="card-title">Total Catering Packages</h5>
+                <h2 class="dashboard-card-number">{{ total_caterings }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-hover">
+    <div class="card-header">
+        <h5 class="mb-0">Recent Activities</h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Target</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in recent_logs %}
+                <tr>
+                    <td>{{ log.username }}</td>
+                    <td><span class="badge bg-secondary">{{ log.action }}</span></td>
+                    <td>{{ log.targetData }}</td>
+                    <td>{{ log.createdAt|date('Y-m-d H:i:s') }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center">No recent activity</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ path('app_activity_log_index') }}" class="btn btn-sm btn-primary mt-2">View All Logs</a>
+    </div>
+</div>
+{% endblock %}

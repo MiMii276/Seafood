@@ -1,17 +1,170 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Seafoodie Management{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🦐</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
+    <style>
+        :root {
+            --primary-color: #208396;
+            --primary-dark: #093839;
+            --button-bg: #208396;
+            --button-hover-bg: #093839;
+        }
+
+        body {
+            background-color: #f0f4f4;
+            color: #000;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: var(--primary-color) !important;
+        }
+        .navbar-nav .nav-link {
+            color: #fff !important;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #000 !important;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--button-bg);
+            border-color: var(--button-bg);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background-color: var(--button-hover-bg);
+            border-color: var(--button-hover-bg);
+        }
+
+        /* Cards */
+        .card {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+            color: #000;
+        }
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+            color: #000;
+        }
+
+        /* Table */
+        table thead {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        table tbody tr:hover {
+            background-color: #e2f5f7;
+        }
+
+        /* Links */
+        a {
+            color: var(--primary-color);
+        }
+        a:hover {
+            color: var(--primary-dark);
+            text-decoration: none;
+        }
+
+        /* Headings */
+        h1, h2, h3, h4, h5, h6 {
+            color: #000;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 2rem;
+        }
+
+        .shadow-hover:hover {
+            box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+    </style>
+
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+    {% if app.user %}
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ path('app_dashboard') }}">🦐 Seafoodie</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_dashboard') }}">Dashboard</a>
+                    </li>
+
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_user_index') }}">Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_activity_log_index') }}">Activity Logs</a>
+                    </li>
+                    {% endif %}
+
+                    {% if is_granted('ROLE_STAFF') or is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_product_index') }}">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_catering_index') }}">Catering</a>
+                    </li>
+                    {% endif %}
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            {{ app.user.name }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ path('app_profile') }}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_profile_change_password') }}">Change Password</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ path('app_logout') }}">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+
+    <div class="container mt-4">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+
         {% block body %}{% endblock %}
-    </body>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block javascripts %}{% endblock %}
+</body>
 </html>

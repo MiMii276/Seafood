@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password    
+      MYSQL_DATABASE: seafoodie  
+      MYSQL_USER: user                
+      MYSQL_PASSWORD: pass 
+    ports:          
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - test_demo_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root                 
+      PMA_PASSWORD: password       
+      PMA_ARBITRARY: 1               
+    ports:
+      - "8001:80"
+    depends_on:
+      - mysql
+    networks:
+      - test_demo_network
+
+volumes:
+  mysql_data:
+
+networks:
+  test_demo_network:
