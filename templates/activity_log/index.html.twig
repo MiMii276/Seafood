@@ -1,0 +1,581 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Activity Log - Seafoodie{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    :root {
+        --primary-dark: #093839;
+        --primary: #1f7a8c;
+        --primary-light: #40b4cc;
+        --accent: #ff7e5e;
+        --accent-glow: rgba(255, 126, 94, 0.3);
+        --glass-bg: rgba(255, 255, 255, 0.95);
+        --shadow-sm: 0 8px 32px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.2);
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+        background: linear-gradient(135deg, #093839 0%, #0f5c6b 50%, #208396 100%);
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    /* Animated background particles effect */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(circle at 20% 40%, rgba(255,255,255,0.05) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .page-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(2px);
+        border-radius: 28px;
+        padding: 40px;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: var(--transition);
+        animation: fadeInUp 0.6s ease-out;
+        position: relative;
+        z-index: 1;
+    }
+
+    .page-card:hover {
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Header with decorative line */
+    .page-header {
+        position: relative;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+    }
+
+    .page-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        letter-spacing: -0.5px;
+        display: inline-block;
+    }
+
+    .page-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), var(--accent));
+        border-radius: 2px;
+    }
+
+    /* Back to Dashboard Button */
+    .btn-back-dashboard {
+        background: linear-gradient(135deg, #1f7a8c, #0a5c6b);
+        color: white;
+        border: none;
+        border-radius: 14px;
+        padding: 10px 24px;
+        font-weight: 600;
+        transition: var(--transition);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-back-dashboard:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(31, 122, 140, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    /* Enhanced form controls */
+    .form-control, .form-select {
+        border-radius: 14px;
+        border: 1.5px solid #e2e8f0;
+        padding: 10px 16px;
+        transition: var(--transition);
+        background-color: #ffffff;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(31, 122, 140, 0.15);
+        outline: none;
+    }
+
+    /* Button styles */
+    .btn-teal {
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        color: #fff;
+        border: none;
+        border-radius: 14px;
+        padding: 10px 24px;
+        font-weight: 600;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-teal::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-teal:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .btn-teal:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(31, 122, 140, 0.4);
+        color: #fff;
+    }
+
+    .btn-outline-teal {
+        background: transparent;
+        color: var(--primary);
+        border: 2px solid var(--primary);
+        border-radius: 14px;
+        padding: 10px 24px;
+        font-weight: 600;
+        transition: var(--transition);
+    }
+
+    .btn-outline-teal:hover {
+        background: var(--primary);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(31, 122, 140, 0.2);
+    }
+
+    .btn-danger-gradient {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: #fff;
+        border: none;
+        border-radius: 14px;
+        padding: 10px 24px;
+        font-weight: 600;
+        transition: var(--transition);
+    }
+
+    .btn-danger-gradient:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+        color: #fff;
+    }
+
+    /* Table styling */
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table thead th {
+        background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+        color: var(--primary-dark);
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 16px 12px;
+        border-bottom: 2px solid var(--primary);
+    }
+
+    .table tbody tr {
+        transition: var(--transition);
+        border-bottom: 1px solid #f0f2f5;
+    }
+
+    .table tbody tr:hover {
+        background: linear-gradient(90deg, rgba(31, 122, 140, 0.08), rgba(64, 180, 204, 0.04));
+        transform: scale(1.01);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .table tbody td {
+        padding: 16px 12px;
+        vertical-align: middle;
+        font-size: 0.9rem;
+    }
+
+    /* Modern badges - FIXED to handle actual database values */
+    .badge-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 40px;
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        transition: var(--transition);
+    }
+
+    .badge-action i {
+        font-size: 0.85rem;
+    }
+
+    .badge-action.login,
+    .badge-action.LOGIN { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+    .badge-action.logout,
+    .badge-action.LOGOUT { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+    .badge-action.create,
+    .badge-action.CREATE_USER,
+    .badge-action.CREATE_PRODUCT,
+    .badge-action.CREATE_CATERING { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; }
+    .badge-action.update,
+    .badge-action.UPDATE_USER,
+    .badge-action.UPDATE_PRODUCT,
+    .badge-action.UPDATE_CATERING { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; }
+    .badge-action.delete,
+    .badge-action.DELETE_USER,
+    .badge-action.DELETE_PRODUCT,
+    .badge-action.DELETE_CATERING { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+
+    /* Details cell with truncation */
+    .details-cell {
+        max-width: 250px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #475569;
+        font-family: 'SF Mono', 'Courier New', monospace;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .details-cell:hover {
+        white-space: normal;
+        background-color: #f8fafc;
+        padding: 8px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    /* Role badges */
+    .role-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: #f1f5f9;
+        color: #475569;
+    }
+
+    .role-badge.admin,
+    .role-badge.Admin {
+        background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+        color: #166534;
+    }
+
+    .role-badge.user,
+    .role-badge.User {
+        background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+        color: #075985;
+    }
+
+    .role-badge.staff,
+    .role-badge.Staff {
+        background: linear-gradient(135deg, #fed7aa, #fde68a);
+        color: #9a3412;
+    }
+
+    /* Empty state styling */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        color: #cbd5e1;
+        margin-bottom: 1rem;
+        opacity: 0.6;
+    }
+
+    .empty-state p {
+        color: #64748b;
+        font-size: 1rem;
+    }
+
+    /* Modal styling */
+    .modal-custom .modal-content {
+        border-radius: 20px;
+        border: none;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .modal-custom .modal-header {
+        border-bottom: 2px solid #fee2e2;
+        background: linear-gradient(135deg, #fff5f5, #ffffff);
+        border-radius: 20px 20px 0 0;
+    }
+
+    .modal-custom .modal-footer {
+        border-top: 1px solid #f0f2f5;
+    }
+
+    /* Toast notification */
+    .toast-notification {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+        animation: slideInRight 0.3s ease-out;
+    }
+
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 768px) {
+        .page-card {
+            padding: 20px;
+        }
+        
+        .page-header h1 {
+            font-size: 1.8rem;
+        }
+        
+        .table thead th,
+        .table tbody td {
+            padding: 12px 8px;
+            font-size: 0.8rem;
+        }
+        
+        .badge-action {
+            padding: 4px 10px;
+            font-size: 0.65rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5 mb-5">
+    <div class="page-card">
+
+        <div class="page-header d-flex justify-content-between align-items-end flex-wrap gap-3">
+            <div>
+                <h1>
+                    <i class="fas fa-history me-2" style="color: var(--primary);"></i>
+                    Activity Log
+                </h1>
+                <p class="text-muted mt-2 mb-0">Track and monitor all system activities</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ path('app_dashboard') }}" class="btn-back-dashboard">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </a>
+                {% if logs is defined and logs|length > 0 %}
+                    <span class="badge bg-light text-dark p-2 px-3 rounded-pill align-self-center">
+                        <i class="fas fa-chart-line me-1"></i> {{ logs|length }} entries
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <form method="get" id="filterForm" class="row g-3 mb-5">
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold text-muted mb-1">
+                    <i class="fas fa-user me-1"></i> Username
+                </label>
+                <input type="text"
+                       name="user"
+                       id="filterUser"
+                       value="{{ filter_user }}"
+                       class="form-control"
+                       placeholder="Search by username...">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold text-muted mb-1">
+                    <i class="fas fa-tag me-1"></i> Action Type
+                </label>
+                <select name="action" id="filterAction" class="form-select">
+                    <option value="">All Actions</option>
+                    <option value="LOGIN" {{ filter_action == 'LOGIN' ? 'selected' : '' }}>🔐 Login</option>
+                    <option value="LOGOUT" {{ filter_action == 'LOGOUT' ? 'selected' : '' }}>🚪 Logout</option>
+                    <option value="CREATE" {{ filter_action == 'CREATE' ? 'selected' : '' }}>✨ Create</option>
+                    <option value="UPDATE" {{ filter_action == 'UPDATE' ? 'selected' : '' }}>✏️ Update</option>
+                    <option value="DELETE" {{ filter_action == 'DELETE' ? 'selected' : '' }}>🗑️ Delete</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold text-muted mb-1">
+                    <i class="fas fa-calendar me-1"></i> Date
+                </label>
+                <input type="date"
+                       name="date"
+                       id="filterDate"
+                       value="{{ filter_date }}"
+                       class="form-control">
+            </div>
+
+            <div class="col-md-3 d-flex gap-2 align-items-end">
+                <button type="submit" class="btn btn-teal flex-grow-1">
+                    <i class="fas fa-filter me-2"></i>Apply Filters
+                </button>
+                <button type="button" id="clearFiltersBtn" class="btn btn-outline-teal">
+                    <i class="fas fa-eraser me-1"></i>Clear
+                </button>
+            </div>
+        </form>
+
+        <!-- Activity Log Table -->
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                        <th>Details</th>
+                        <th>Date & Time</th>
+                    </tr>
+                </thead>
+                <tbody id="logsTableBody">
+                    {% for log in logs %}
+                        <tr>
+                            <td class="fw-semibold text-muted">#{{ log.id }}</td>
+                            <td class="fw-semibold">{{ log.username }}</td>
+                            <td>
+                                <span class="role-badge {{ log.role|lower }}">
+                                    <i class="fas {% if log.role == 'Admin' or log.role == 'admin' %}fa-crown{% else %}fa-user{% endif %} me-1"></i>
+                                    {{ log.role|default('User') }}
+                                </span>
+                            </td>
+                            <td>
+                                {% set actionUpper = log.action|upper %}
+                                <span class="badge-action {{ actionUpper }}">
+                                    <i class="fas 
+                                        {% if actionUpper == 'LOGIN' %}fa-sign-in-alt
+                                        {% elseif actionUpper == 'LOGOUT' %}fa-sign-out-alt
+                                        {% elseif 'CREATE' in actionUpper %}fa-plus-circle
+                                        {% elseif 'UPDATE' in actionUpper %}fa-edit
+                                        {% elseif 'DELETE' in actionUpper %}fa-trash-alt
+                                        {% else %}fa-info-circle{% endif %}">
+                                    </i>
+                                    {{ log.action }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="details-cell" title="{{ log.targetData }}">
+                                    {{ log.targetData|default('—')|length > 50 ? log.targetData|slice(0, 50) ~ '…' : log.targetData|default('—') }}
+                                </div>
+                            </td>
+                            <td class="text-nowrap">
+                                <i class="far fa-clock me-1 text-muted"></i>
+                                <span title="{{ log.createdAt|date('F j, Y g:i:s A') }}">
+                                    {{ log.createdAt|date('M d, Y') }}
+                                    <span class="text-muted small">{{ log.createdAt|date('h:i A') }}</span>
+                                </span>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6">
+                                <div class="empty-state">
+                                    <i class="fas fa-clipboard-list"></i>
+                                    <p class="mb-0">No activity logs found matching your criteria.</p>
+                                    {% if filter_user or filter_action or filter_date %}
+                                        <button type="button" id="emptyStateClearBtn" class="btn btn-link mt-2">
+                                            <i class="fas fa-undo-alt me-1"></i>Clear all filters
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if logs is defined and logs|length > 0 %}
+            <div class="mt-4 text-center text-muted small">
+                <i class="fas fa-info-circle me-1"></i> Showing latest activity records
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Clear Filters Button
+    const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', function() {
+            document.getElementById('filterUser').value = '';
+            document.getElementById('filterAction').value = '';
+            document.getElementById('filterDate').value = '';
+            document.getElementById('filterForm').submit();
+        });
+    }
+
+    // Empty State Clear Button
+    const emptyStateClearBtn = document.getElementById('emptyStateClearBtn');
+    if (emptyStateClearBtn) {
+        emptyStateClearBtn.addEventListener('click', function() {
+            document.getElementById('filterUser').value = '';
+            document.getElementById('filterAction').value = '';
+            document.getElementById('filterDate').value = '';
+            document.getElementById('filterForm').submit();
+        });
+    }
+});
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catering Details - Seafoodie{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body {
+        background: linear-gradient(135deg, #093839, #208396);
+        min-height: 100vh;
+    }
+
+    .page-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-teal {
+        background-color: #1f7a8c;
+        color: #fff;
+    }
+
+    .btn-teal:hover {
+        background-color: #16636f;
+        color: #fff;
+    }
+
+    .badge-status {
+        font-weight: 500;
+        padding: 0.4em 0.7em;
+        border-radius: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="page-card">
+
+        <h1 class="mb-4">Catering Details</h1>
+
+        <div class="table-responsive mb-4">
+            <table class="table table-bordered">
+                <tr>
+                    <th>Name</th>
+                    <td>{{ catering.name }}</td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td>{{ catering.description ?: '-' }}</td>
+                </tr>
+                <tr>
+                    <th>Event Date</th>
+                    <td>{{ catering.eventDate|date('M d, Y') }}</td>
+                </tr>
+                <tr>
+                    <th>Guests</th>
+                    <td>{{ catering.numberOfGuests }}</td>
+                </tr>
+                <tr>
+                    <th>Price</th>
+                    <td>₱{{ catering.price|number_format(2, '.', ',') }}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>
+                        <span class="badge badge-status
+                            {% if catering.status == 'Approved' %} bg-success
+                            {% elseif catering.status == 'Pending' %} bg-warning text-dark
+                            {% elseif catering.status == 'Rejected' %} bg-danger
+                            {% else %} bg-secondary
+                            {% endif %}">
+                            {{ catering.status }}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Created By</th>
+                    <td>{{ catering.createdBy.name }}</td>
+                </tr>
+                <tr>
+                    <th>Created At</th>
+                    <td>{{ catering.createdAt|date('M d, Y - h:i A') }}</td>
+                </tr>
+                <tr>
+                    <th>Updated At</th>
+                    <td>{{ catering.updatedAt ? catering.updatedAt|date('M d, Y - h:i A') : '-' }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <h5 class="mb-3">Products Included</h5>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in catering.products %}
+                        <tr>
+                            <td>{{ product.name }}</td>
+                            <td>₱{{ product.price|number_format(2, '.', ',') }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No products added</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <a href="{{ path('app_catering_index') }}" class="btn btn-teal mt-3">
+            ← Back to Catering List
+        </a>
+
+    </div>
+</div>
+{% endblock %}

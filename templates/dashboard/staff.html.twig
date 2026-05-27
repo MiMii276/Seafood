@@ -1,0 +1,785 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Staff Dashboard — Seafoodie{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* Hide footer on dashboard */
+    .footer {
+        display: none !important;
+    }
+
+    /* ===== DASHBOARD WRAPPER ===== */
+    .dash-wrapper {
+        min-height: 100vh;
+        background: linear-gradient(135deg, var(--cream) 0%, var(--sand) 100%);
+        position: relative;
+    }
+
+    /* Decorative background orbs */
+    .dash-bg-orb {
+        position: fixed;
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0.4;
+        z-index: 0;
+    }
+    .dash-bg-orb-1 {
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, var(--teal-light) 0%, transparent 70%);
+        top: -200px;
+        right: -150px;
+    }
+    .dash-bg-orb-2 {
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, var(--amber-light) 0%, transparent 70%);
+        bottom: -150px;
+        left: -150px;
+    }
+
+    /* ===== PREMIUM HEADER (matching dashboard style) ===== */
+    .dash-header {
+        background: linear-gradient(135deg, var(--teal-deep) 0%, var(--teal-mid) 100%);
+        position: relative;
+        overflow: hidden;
+        padding: 2.5rem 0;
+        z-index: 1;
+    }
+
+    .dash-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+        background-size: 40px 40px;
+        animation: slowDrift 60s linear infinite;
+        pointer-events: none;
+    }
+
+    @keyframes slowDrift {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(40px, 40px); }
+    }
+
+    .dash-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--teal-bright), var(--amber), var(--teal-bright));
+        background-size: 200% 100%;
+        animation: gradientShift 3s ease infinite;
+    }
+
+    @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    .welcome-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 0.25rem;
+    }
+    .welcome-title em {
+        font-style: italic;
+        color: var(--amber);
+    }
+
+    /* Profile Dropdown (matching dashboard) */
+    .profile-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .btn-profile {
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.2);
+        padding: 0.6rem 1.5rem;
+        border-radius: 60px;
+        font-weight: 500;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        cursor: pointer;
+        color: white;
+    }
+
+    .btn-profile:hover {
+        background: rgba(255,255,255,0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .dropdown-menu-custom {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        margin-top: 0.5rem;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 35px -10px rgba(0,0,0,0.2);
+        min-width: 220px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+        z-index: 1000;
+    }
+
+    .profile-dropdown:hover .dropdown-menu-custom {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .dropdown-item-custom {
+        padding: 0.75rem 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        text-decoration: none;
+        color: var(--ink);
+        transition: all 0.2s ease;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.85rem;
+    }
+
+    .dropdown-item-custom:first-child { border-radius: 20px 20px 0 0; }
+    .dropdown-item-custom:last-child { border-bottom: none; border-radius: 0 0 20px 20px; }
+    .dropdown-item-custom:hover { background: var(--cream); color: var(--teal-mid); padding-left: 1.5rem; }
+    .dropdown-divider { height: 1px; background: #e2e8f0; margin: 0.25rem 0; }
+    .text-danger-custom { color: #dc2626; }
+    .text-danger-custom:hover { background: #fef2f2; color: #b91c1c; }
+
+    /* ===== STATS CARDS (matching dashboard) ===== */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .stat-card {
+        background: #fff;
+        border-radius: 28px;
+        padding: 1.75rem;
+        transition: all 0.4s cubic-bezier(0.2, 0.85, 0.4, 1);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+        border: 1px solid rgba(0,0,0,0.03);
+        text-align: center;
+        animation: fadeInUp 0.5s ease forwards;
+        opacity: 0;
+    }
+    .stat-card:nth-child(1) { animation-delay: 0.05s; }
+    .stat-card:nth-child(2) { animation-delay: 0.1s; }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .stat-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 35px -12px rgba(7,59,58,0.15);
+    }
+
+    .stat-icon-wrapper {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, var(--teal-light), rgba(26,167,164,0.1));
+        border-radius: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        transition: all 0.3s ease;
+    }
+    .stat-card:hover .stat-icon-wrapper { transform: scale(1.05); }
+
+    .stat-icon-wrapper i {
+        font-size: 2rem;
+        color: var(--teal-mid);
+    }
+
+    .stat-number {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: var(--ink);
+        line-height: 1.2;
+    }
+
+    .stat-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-top: 0.25rem;
+    }
+
+    /* ===== SEARCH BOX ===== */
+    .search-wrapper {
+        background: white;
+        border-radius: 24px;
+        padding: 0.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.04);
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .search-box {
+        display: flex;
+        gap: 0.5rem;
+        background: var(--cream);
+        border-radius: 20px;
+        padding: 0.25rem;
+    }
+
+    .search-box input {
+        flex: 1;
+        border: none;
+        background: transparent;
+        padding: 0.85rem 1.25rem;
+        border-radius: 16px;
+        outline: none;
+        font-size: 0.9rem;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .search-box button {
+        background: linear-gradient(135deg, var(--teal-mid), var(--teal-deep));
+        border: none;
+        padding: 0.85rem 2rem;
+        border-radius: 18px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .search-box button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(13,110,108,0.3);
+    }
+
+    /* ===== SECTION HEADER ===== */
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .section-header h3 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--ink);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+    .section-header h3 i {
+        color: var(--teal-mid);
+        font-size: 1.4rem;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn-add {
+        background: linear-gradient(135deg, var(--teal-deep), var(--teal-mid));
+        color: white;
+        border: none;
+        padding: 0.7rem 1.8rem;
+        border-radius: 60px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-add:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(7,59,58,0.3);
+        color: white;
+    }
+
+    .btn-view-all {
+        background: transparent;
+        color: var(--teal-mid);
+        border: 2px solid var(--teal-mid);
+        padding: 0.7rem 1.8rem;
+        border-radius: 60px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-view-all:hover {
+        background: linear-gradient(135deg, var(--teal-mid), var(--teal-deep));
+        color: white;
+        transform: translateY(-2px);
+        border-color: transparent;
+        box-shadow: 0 8px 20px rgba(13,110,108,0.25);
+    }
+
+    /* ===== PRODUCT CARDS ===== */
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .product-card {
+        background: white;
+        border-radius: 24px;
+        padding: 1.5rem;
+        transition: all 0.4s cubic-bezier(0.2, 0.85, 0.4, 1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.04);
+        border: 1px solid rgba(0,0,0,0.03);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .product-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--teal-bright), var(--amber));
+        transform: scaleX(0);
+        transition: transform 0.4s ease;
+    }
+
+    .product-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 30px -12px rgba(0,0,0,0.12);
+    }
+
+    .product-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--ink);
+        margin-bottom: 0.5rem;
+    }
+
+    .product-description {
+        color: var(--muted);
+        font-size: 0.8rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+    }
+
+    .price {
+        color: var(--amber);
+        font-size: 1.4rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+    }
+
+    .stock-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.25rem 0.85rem;
+        background: var(--cream);
+        border-radius: 60px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: var(--teal-mid);
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--sand);
+    }
+
+    .btn-edit {
+        flex: 1;
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        color: white;
+        border: none;
+        padding: 0.6rem;
+        border-radius: 14px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        transition: all 0.2s ease;
+    }
+
+    .btn-edit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(139,92,246,0.3);
+        color: white;
+    }
+
+    .btn-delete {
+        flex: 1;
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        border: none;
+        padding: 0.6rem;
+        border-radius: 14px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .btn-delete:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(239,68,68,0.3);
+    }
+
+    /* ===== CATERING CARDS ===== */
+    .caterings-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .catering-card {
+        background: white;
+        border-radius: 24px;
+        padding: 1.5rem;
+        transition: all 0.4s cubic-bezier(0.2, 0.85, 0.4, 1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.04);
+        border: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .catering-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 30px -12px rgba(0,0,0,0.12);
+    }
+
+    .badge-pending {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+        padding: 0.3rem 0.9rem;
+        border-radius: 60px;
+        font-size: 0.7rem;
+        font-weight: 700;
+    }
+
+    .badge-completed {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 0.3rem 0.9rem;
+        border-radius: 60px;
+        font-size: 0.7rem;
+        font-weight: 700;
+    }
+
+    .catering-info {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 0.6rem;
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+
+    .catering-info i {
+        width: 20px;
+        color: var(--teal-mid);
+    }
+
+    /* ===== EMPTY STATE ===== */
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        background: white;
+        border-radius: 24px;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        color: #cbd5e1;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state h5 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--ink);
+        margin-bottom: 0.25rem;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .header-actions {
+            width: 100%;
+            flex-direction: column;
+        }
+
+        .btn-add, .btn-view-all {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .dash-header .row {
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
+        }
+
+        .products-grid, .caterings-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .welcome-title {
+            font-size: 1.6rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="dash-wrapper">
+    <!-- Decorative background orbs -->
+    <div class="dash-bg-orb dash-bg-orb-1"></div>
+    <div class="dash-bg-orb dash-bg-orb-2"></div>
+
+    <!-- Premium Header -->
+    <div class="dash-header">
+        <div class="container">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <h1 class="welcome-title">
+                        <i class="fas fa-crown me-2" style="color: var(--amber);"></i>Staff <em>Dashboard</em>
+                    </h1>
+                    <p class="text-white-50 mb-0" style="opacity: 0.7;">
+                        <i class="fas fa-star me-1" style="color: var(--amber);"></i>
+                        Welcome back, <strong>{{ app.user.name|default(app.user.email)|split('@')[0] }}</strong>! Here's your performance overview
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-md-end gap-3 align-items-center">
+                        <a href="{{ path('app_home') }}" class="btn btn-light btn-sm rounded-pill px-3 py-2" style="background: rgba(255,255,255,0.15); border: none; color: white;">
+                            <i class="fas fa-globe"></i> Website
+                        </a>
+                        <!-- Premium Profile Dropdown -->
+                        <div class="profile-dropdown">
+                            <button class="btn-profile">
+                                <i class="fas fa-user-circle"></i>
+                                {{ app.user.name|default(app.user.email)|split('@')[0] }}
+                                <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+                            </button>
+                            <div class="dropdown-menu-custom">
+                                <a href="{{ path('app_profile') }}" class="dropdown-item-custom">
+                                    <i class="fas fa-user"></i> My Profile
+                                </a>
+                                <a href="{{ path('app_user_edit', {id: app.user.id}) }}" class="dropdown-item-custom">
+                                    <i class="fas fa-edit"></i> Edit Profile
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="{{ path('app_logout') }}" class="dropdown-item-custom text-danger-custom" onclick="return confirm('Are you sure you want to logout?')">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-4">
+        <!-- Premium Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon-wrapper">
+                    <i class="fas fa-fish"></i>
+                </div>
+                <div class="stat-number">{{ my_products_count|default(0) }}</div>
+                <div class="stat-label">Products Managed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon-wrapper">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <div class="stat-number">{{ my_caterings_count|default(0) }}</div>
+                <div class="stat-label">Catering Orders</div>
+            </div>
+        </div>
+
+        <!-- Products Section -->
+        <div class="section-header">
+            <h3>
+                <i class="fas fa-fish"></i>
+                My Product Collection
+            </h3>
+            <div class="header-actions">
+                <a href="{{ path('app_product_index') }}" class="btn-view-all">
+                    <i class="fas fa-eye"></i> View All Products
+                </a>
+                <a href="{{ path('app_product_new') }}" class="btn-add">
+                    <i class="fas fa-plus-circle"></i> Add New Product
+                </a>
+            </div>
+        </div>
+
+        <!-- Premium Search Box -->
+        <div class="search-wrapper">
+            <form method="GET" action="{{ path('app_dashboard') }}" class="search-box">
+                <input type="text" name="search" class="form-control" placeholder="🔍 Search products by name..." value="{{ app.request.query.get('search') }}">
+                <button type="submit">
+                    <i class="fas fa-search me-1"></i> Search
+                </button>
+            </form>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="products-grid">
+            {% for product in my_products %}
+                <div class="product-card">
+                    <div class="product-name">{{ product.name }}</div>
+                    <div class="product-description">{{ product.description|default('No description')|length > 100 ? product.description|slice(0, 100) ~ '...' : product.description|default('No description') }}</div>
+                    <div class="price">₱{{ product.price|number_format(2) }}</div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="stock-badge">
+                            <i class="fas fa-box"></i> Stock: {{ product.stock|default(0) }}
+                        </span>
+                    </div>
+                    <div class="action-buttons">
+                        <a href="{{ path('app_product_edit', {id: product.id}) }}" class="btn-edit">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <form action="{{ path('app_product_delete', {id: product.id}) }}" method="post" class="d-inline w-100" onsubmit="return confirm('⚠️ Delete this product? This action cannot be undone!')">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                            <button type="submit" class="btn-delete w-100">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-fish"></i>
+                    <h5>No Products Yet</h5>
+                    <p class="text-muted">Get started by adding your first product!</p>
+                    <a href="{{ path('app_product_new') }}" class="btn-add mt-3" style="display: inline-flex;">
+                        <i class="fas fa-plus-circle"></i> Create Product
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Catering Orders Section -->
+        <div class="section-header mt-5">
+            <h3>
+                <i class="fas fa-utensils"></i>
+                My Catering Orders
+            </h3>
+        </div>
+
+        <div class="caterings-grid">
+            {% for catering in my_caterings %}
+                <div class="catering-card">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h5 class="mb-0" style="font-weight: 700; color: var(--ink);">{{ catering.eventName|default('Catering Event') }}</h5>
+                        <span class="{{ catering.status|default('pending') == 'completed' ? 'badge-completed' : 'badge-pending' }}">
+                            <i class="fas {{ catering.status|default('pending') == 'completed' ? 'fa-check-circle' : 'fa-clock' }} me-1"></i>
+                            {{ catering.status|default('pending')|upper }}
+                        </span>
+                    </div>
+                    <div class="catering-info">
+                        <i class="fas fa-calendar"></i>
+                        <span>{{ catering.eventDate|date('F d, Y') }}</span>
+                    </div>
+                    <div class="catering-info">
+                        <i class="fas fa-users"></i>
+                        <span>{{ catering.guests|default(0) }} guests</span>
+                    </div>
+                    <div class="catering-info">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>{{ catering.location|default('TBD') }}</span>
+                    </div>
+                    <div class="price mt-3">₱{{ catering.totalPrice|default(0)|number_format(2) }}</div>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-utensils"></i>
+                    <h5>No Catering Orders</h5>
+                    <p class="text-muted">Catering orders will appear here once customers place them.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+// Smooth hover animations
+document.querySelectorAll('.stat-card, .product-card, .catering-card').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        this.style.transition = 'all 0.4s cubic-bezier(0.2, 0.85, 0.4, 1)';
+    });
+});
+</script>
+{% endblock %}

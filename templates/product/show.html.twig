@@ -1,0 +1,496 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Product Details - Seafoodie{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    /* ========================================
+       COMPACT PREMIUM PRODUCT DETAILS DESIGN
+       ======================================== */
+    
+    @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+    
+    body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #f5f7fc 0%, #eef2f8 100%);
+        min-height: 100vh;
+    }
+    
+    /* Hide footer */
+    .footer {
+        display: none !important;
+    }
+    
+    /* Main Wrapper */
+    .details-wrapper {
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+    }
+    
+    /* Premium Card */
+    .details-card {
+        background: white;
+        border-radius: 1.5rem;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        width: 100%;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    /* Premium Header */
+    .details-header {
+        background: linear-gradient(135deg, #0a2b2e, #1f7a8c);
+        padding: 1.25rem 1.5rem;
+        text-align: center;
+        position: relative;
+    }
+    
+    .details-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #f4a942, #1f7a8c, #f4a942);
+    }
+    
+    .header-icon {
+        width: 48px;
+        height: 48px;
+        background: rgba(255,255,255,0.12);
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 0.5rem;
+    }
+    
+    .header-icon i {
+        font-size: 1.4rem;
+        color: white;
+    }
+    
+    .details-header h1 {
+        color: white;
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: -0.3px;
+    }
+    
+    .details-header p {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.7rem;
+        margin: 0.25rem 0 0;
+    }
+    
+    /* Content Body */
+    .details-body {
+        padding: 1.5rem;
+    }
+    
+    /* Product Image Placeholder */
+    .product-image {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .image-placeholder {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #f8fafc, #eef2f8);
+        border-radius: 1.25rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px dashed #cbd5e1;
+    }
+    
+    .image-placeholder i {
+        font-size: 2.5rem;
+        color: #1f7a8c;
+    }
+    
+    /* Info Grid */
+    .info-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .info-row {
+        display: flex;
+        align-items: center;
+        padding: 0.6rem 0.8rem;
+        background: #f8fafc;
+        border-radius: 0.75rem;
+        transition: all 0.2s ease;
+        border: 1px solid #eef2f8;
+    }
+    
+    .info-row:hover {
+        background: white;
+        border-color: #1f7a8c;
+        transform: translateX(3px);
+    }
+    
+    .info-label {
+        width: 100px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    
+    .info-label i {
+        font-size: 0.7rem;
+        color: #1f7a8c;
+        width: 16px;
+    }
+    
+    .info-value {
+        flex: 1;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #1e2a3e;
+        word-break: break-word;
+    }
+    
+    /* Price & Stock Row - INLINE */
+    .info-row-inline {
+        display: flex;
+        align-items: center;
+        padding: 0.6rem 0.8rem;
+        background: #f8fafc;
+        border-radius: 0.75rem;
+        transition: all 0.2s ease;
+        border: 1px solid #eef2f8;
+        gap: 1rem;
+    }
+    
+    .info-row-inline:hover {
+        background: white;
+        border-color: #1f7a8c;
+        transform: translateX(3px);
+    }
+    
+    .info-item {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .info-item-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    
+    .info-item-label i {
+        font-size: 0.7rem;
+        color: #1f7a8c;
+    }
+    
+    .divider-vertical {
+        width: 1px;
+        height: 30px;
+        background: #e2e8f0;
+    }
+    
+    /* Price Badge */
+    .price-badge {
+        background: linear-gradient(135deg, #f4a94220, #f4a94210);
+        padding: 0.25rem 0.75rem;
+        border-radius: 2rem;
+        display: inline-block;
+        font-size: 0.9rem;
+        font-weight: 800;
+        color: #f4a942;
+    }
+    
+    /* Stock Badge */
+    .stock-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.2rem 0.6rem;
+        border-radius: 2rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+    
+    .stock-high {
+        background: #d1fae5;
+        color: #065f46;
+    }
+    
+    .stock-medium {
+        background: #fed7aa;
+        color: #9a3412;
+    }
+    
+    .stock-low {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
+    
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+    }
+    
+    .btn-edit {
+        flex: 1;
+        background: linear-gradient(135deg, #1f7a8c, #0a5c6b);
+        color: white;
+        border: none;
+        padding: 0.65rem;
+        border-radius: 2rem;
+        font-weight: 700;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+    }
+    
+    .btn-edit:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 14px -6px rgba(31, 122, 140, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+    
+    .btn-back {
+        flex: 1;
+        background: transparent;
+        color: #64748b;
+        border: 1.5px solid #e2e8f0;
+        padding: 0.65rem;
+        border-radius: 2rem;
+        font-weight: 700;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+    }
+    
+    .btn-back:hover {
+        background: #f8fafc;
+        border-color: #1f7a8c;
+        color: #1f7a8c;
+        text-decoration: none;
+    }
+    
+    /* Meta Footer */
+    .meta-footer {
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eef2f8;
+        font-size: 0.65rem;
+        color: #94a3b8;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .meta-footer i {
+        margin-right: 0.25rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 480px) {
+        .details-wrapper {
+            padding: 1rem;
+        }
+        .details-body {
+            padding: 1.25rem;
+        }
+        .info-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.3rem;
+        }
+        .info-label {
+            width: 100%;
+        }
+        .info-row-inline {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.5rem;
+        }
+        .info-item {
+            justify-content: space-between;
+        }
+        .divider-vertical {
+            display: none;
+        }
+        .action-buttons {
+            flex-direction: column;
+        }
+        .meta-footer {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .header-icon {
+            width: 40px;
+            height: 40px;
+        }
+        .header-icon i {
+            font-size: 1.2rem;
+        }
+        .details-header h1 {
+            font-size: 1.2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="details-wrapper">
+    <div class="details-card">
+        <div class="details-header">
+            <div class="header-icon">
+                <i class="fas fa-fish"></i>
+            </div>
+            <h1>Product Details</h1>
+            <p>{{ product.name }}</p>
+        </div>
+
+        <div class="details-body">
+            <!-- Product Image Placeholder -->
+            <div class="product-image">
+                <div class="image-placeholder">
+                    <i class="fas fa-fish"></i>
+                </div>
+            </div>
+
+            <!-- Info Grid -->
+            <div class="info-grid">
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="fas fa-barcode"></i>
+                        <span>ID</span>
+                    </div>
+                    <div class="info-value">#{{ product.id }}</div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="fas fa-tag"></i>
+                        <span>Name</span>
+                    </div>
+                    <div class="info-value">{{ product.name }}</div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="fas fa-align-left"></i>
+                        <span>Description</span>
+                    </div>
+                    <div class="info-value">{{ product.description ?: '—' }}</div>
+                </div>
+
+                <!-- PRICE & STOCK INLINE ROW -->
+                <div class="info-row-inline">
+                    <div class="info-item">
+                        <div class="info-item-label">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Price</span>
+                        </div>
+                        <div class="info-value">
+                            <span class="price-badge">₱{{ product.price|number_format(2) }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="divider-vertical"></div>
+                    
+                    <div class="info-item">
+                        <div class="info-item-label">
+                            <i class="fas fa-box"></i>
+                            <span>Stock</span>
+                        </div>
+                        <div class="info-value">
+                            {% if product.stock > 50 %}
+                                <span class="stock-badge stock-high">
+                                    <i class="fas fa-check-circle"></i> {{ product.stock }} units
+                                </span>
+                            {% elseif product.stock > 10 %}
+                                <span class="stock-badge stock-medium">
+                                    <i class="fas fa-exclamation-triangle"></i> {{ product.stock }} units
+                                </span>
+                            {% else %}
+                                <span class="stock-badge stock-low">
+                                    <i class="fas fa-times-circle"></i> {{ product.stock }} units
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="fas fa-user"></i>
+                        <span>Created By</span>
+                    </div>
+                    <div class="info-value">{{ product.createdBy ? product.createdBy.name : 'N/A' }}</div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="{{ path('app_product_edit', {id: product.id}) }}" class="btn-edit">
+                    <i class="fas fa-edit"></i> Edit Product
+                </a>
+                <a href="{{ path('app_product_index') }}" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+
+            <!-- Meta Footer -->
+            <div class="meta-footer">
+                <span>
+                    <i class="far fa-calendar-alt"></i>
+                    Created: {{ product.createdAt|date('M d, Y') }}
+                </span>
+                <span>
+                    <i class="far fa-clock"></i>
+                    {{ product.createdAt|date('h:i A') }}
+                </span>
+                {% if product.updatedAt %}
+                    <span>
+                        <i class="fas fa-sync-alt"></i>
+                        Updated: {{ product.updatedAt|date('M d, Y h:i A') }}
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

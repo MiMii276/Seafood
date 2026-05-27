@@ -1,0 +1,383 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Product - Seafoodie{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    /* ========================================
+       COMPACT PREMIUM EDIT PRODUCT FORM
+       ======================================== */
+    
+    @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+    
+    body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #f5f7fc 0%, #eef2f8 100%);
+        min-height: 100vh;
+    }
+    
+    /* Hide footer */
+    .footer {
+        display: none !important;
+    }
+    
+    /* Main Wrapper */
+    .edit-wrapper {
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+    }
+    
+    /* Premium Card */
+    .edit-card {
+        background: white;
+        border-radius: 1.5rem;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        max-width: 550px;
+        width: 100%;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    /* Premium Header */
+    .edit-header {
+        background: linear-gradient(135deg, #0a2b2e, #1f7a8c);
+        padding: 1.25rem 1.5rem;
+        text-align: center;
+        position: relative;
+    }
+    
+    .edit-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #f4a942, #1f7a8c, #f4a942);
+    }
+    
+    .header-icon {
+        width: 48px;
+        height: 48px;
+        background: rgba(255,255,255,0.12);
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 0.5rem;
+    }
+    
+    .header-icon i {
+        font-size: 1.4rem;
+        color: white;
+    }
+    
+    .edit-header h1 {
+        color: white;
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: -0.3px;
+    }
+    
+    .edit-header p {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.7rem;
+        margin: 0.25rem 0 0;
+    }
+    
+    /* Form Body */
+    .form-body {
+        padding: 1.5rem;
+    }
+    
+    /* Form Groups */
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    
+    .form-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #64748b;
+        margin-bottom: 0.3rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    
+    .form-label i {
+        font-size: 0.7rem;
+        color: #1f7a8c;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 0.6rem 0.85rem;
+        font-size: 0.85rem;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 0.75rem;
+        transition: all 0.2s ease;
+        background: white;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: #1f7a8c;
+        box-shadow: 0 0 0 3px rgba(31, 122, 140, 0.1);
+    }
+    
+    textarea.form-control {
+        resize: vertical;
+        min-height: 80px;
+    }
+    
+    /* Price & Stock Inline Row */
+    .inline-row {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-end;
+    }
+    
+    .inline-row .form-group {
+        flex: 1;
+        margin-bottom: 0;
+    }
+    
+    /* Price Input Group */
+    .price-input-group {
+        position: relative;
+    }
+    
+    .price-input-group::before {
+        content: '₱';
+        position: absolute;
+        left: 0.85rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-weight: 600;
+        font-size: 0.85rem;
+        z-index: 1;
+    }
+    
+    .price-input-group input {
+        padding-left: 2rem;
+    }
+    
+    /* Stock Input Group */
+    .stock-input-group {
+        position: relative;
+    }
+    
+    .stock-input-group::before {
+        content: '📦';
+        position: absolute;
+        left: 0.85rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 0.75rem;
+        z-index: 1;
+    }
+    
+    .stock-input-group input {
+        padding-left: 2.2rem;
+    }
+    
+    /* Error Styling */
+    .form-error {
+        color: #dc2626;
+        font-size: 0.65rem;
+        margin-top: 0.3rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    
+    .form-error i {
+        font-size: 0.65rem;
+    }
+    
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+    }
+    
+    .btn-save {
+        flex: 1;
+        background: linear-gradient(135deg, #1f7a8c, #0a5c6b);
+        color: white;
+        border: none;
+        padding: 0.65rem;
+        border-radius: 2rem;
+        font-weight: 700;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        cursor: pointer;
+    }
+    
+    .btn-save:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 14px -6px rgba(31, 122, 140, 0.4);
+    }
+    
+    .btn-cancel {
+        flex: 1;
+        background: transparent;
+        color: #64748b;
+        border: 1.5px solid #e2e8f0;
+        padding: 0.65rem;
+        border-radius: 2rem;
+        font-weight: 700;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+    }
+    
+    .btn-cancel:hover {
+        background: #f8fafc;
+        border-color: #1f7a8c;
+        color: #1f7a8c;
+        text-decoration: none;
+    }
+    
+    /* Responsive */
+    @media (max-width: 480px) {
+        .edit-wrapper {
+            padding: 1rem;
+        }
+        .form-body {
+            padding: 1.25rem;
+        }
+        .inline-row {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .action-buttons {
+            flex-direction: column;
+        }
+        .header-icon {
+            width: 40px;
+            height: 40px;
+        }
+        .header-icon i {
+            font-size: 1.2rem;
+        }
+        .edit-header h1 {
+            font-size: 1.2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="edit-wrapper">
+    <div class="edit-card">
+        <div class="edit-header">
+            <div class="header-icon">
+                <i class="fas fa-edit"></i>
+            </div>
+            <h1>Edit Product</h1>
+            <p>Update your product information</p>
+        </div>
+
+        <div class="form-body">
+            {{ form_start(form) }}
+
+            <!-- Product Name -->
+            <div class="form-group">
+                <div class="form-label">
+                    <i class="fas fa-tag"></i>
+                    <span>Product Name</span>
+                </div>
+                {{ form_widget(form.name, {'attr': {'class': 'form-control', 'placeholder': 'Product name...'}}) }}
+                {% if form_errors(form.name) %}
+                    <div class="form-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ form_errors(form.name) }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <div class="form-label">
+                    <i class="fas fa-align-left"></i>
+                    <span>Description</span>
+                </div>
+                {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 3, 'placeholder': 'Product description...'}}) }}
+                {% if form_errors(form.description) %}
+                    <div class="form-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ form_errors(form.description) }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Price & Stock INLINE ROW -->
+            <div class="inline-row">
+                <div class="form-group">
+                    <div class="form-label">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Price (₱)</span>
+                    </div>
+                    <div class="price-input-group">
+                        {{ form_widget(form.price, {'attr': {'class': 'form-control', 'placeholder': '0.00', 'step': '0.01'}}) }}
+                    </div>
+                    {% if form_errors(form.price) %}
+                        <div class="form-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ form_errors(form.price) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">
+                        <i class="fas fa-box"></i>
+                        <span>Stock</span>
+                    </div>
+                    <div class="stock-input-group">
+                        {{ form_widget(form.stock, {'attr': {'class': 'form-control', 'placeholder': '0', 'min': '0'}}) }}
+                    </div>
+                    {% if form_errors(form.stock) %}
+                        <div class="form-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ form_errors(form.stock) }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button type="submit" class="btn-save">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+                <a href="{{ path('app_product_index') }}" class="btn-cancel">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,307 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fresh Seafood Delivered to Your Door - Seafoodie{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    * { box-sizing: border-box; }
+
+    :root {
+        --teal-deep: #073B3A;
+        --teal-mid: #0D6E6C;
+        --teal-bright: #1AA7A4;
+        --teal-light: #C8EFEE;
+        --amber: #E8A030;
+        --amber-light: #FDF0D5;
+        --cream: #FAF8F3;
+        --sand: #EFE9D9;
+        --ink: #0D1F1E;
+        --muted: #556B6A;
+    }
+
+    /* ── HERO ── */
+    .hero {
+        position: relative;
+        background: var(--teal-deep);
+        min-height: 92vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        overflow: hidden;
+        padding: 80px 40px 100px;
+        margin-top: -56px;
+    }
+
+    .hero-wave-top {
+        position: absolute; top: 0; left: 0; right: 0; height: 5px;
+        background: linear-gradient(90deg, var(--teal-bright), var(--amber), var(--teal-bright));
+    }
+
+    .hero-orb {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.08;
+        pointer-events: none;
+    }
+    .hero-orb-1 { width: 500px; height: 500px; background: var(--teal-bright); top: -120px; left: -80px; }
+    .hero-orb-2 { width: 380px; height: 380px; background: var(--amber); bottom: -60px; right: -80px; }
+    .hero-orb-3 { width: 200px; height: 200px; background: var(--teal-bright); bottom: 60px; left: 35%; opacity: 0.05; }
+
+    .hero-eyebrow {
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--teal-bright);
+        background: rgba(26,167,164,0.12);
+        border: 1px solid rgba(26,167,164,0.3);
+        padding: 6px 18px;
+        border-radius: 50px;
+        margin-bottom: 28px;
+        display: inline-block;
+        position: relative;
+    }
+
+    .hero h1 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(3.2rem, 7vw, 5.5rem);
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.05;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .hero h1 em {
+        font-style: italic;
+        color: var(--amber);
+    }
+
+    .hero-sub {
+        font-size: 16px;
+        color: rgba(255,255,255,0.6);
+        font-weight: 300;
+        letter-spacing: 0.02em;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    .btn-primary-sf {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--amber);
+        color: var(--ink);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        padding: 14px 34px;
+        border-radius: 50px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+    }
+    .btn-primary-sf:hover { background: #f5b040; transform: translateY(-2px); color: var(--ink); }
+
+    .btn-ghost-sf {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: transparent;
+        color: rgba(255,255,255,0.65);
+        font-size: 15px;
+        font-weight: 400;
+        padding: 14px 24px;
+        border-radius: 50px;
+        text-decoration: none;
+        border: 1px solid rgba(255,255,255,0.2);
+        margin-left: 12px;
+        transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost-sf:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+
+    .hero-scroll-indicator {
+        position: absolute;
+        bottom: 28px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        opacity: 0.35;
+    }
+    .scroll-dot {
+        width: 4px; height: 4px; border-radius: 50%; background: #fff;
+        animation: bounce 1.4s infinite;
+    }
+    .scroll-dot:nth-child(2) { animation-delay: 0.2s; }
+    .scroll-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+        0%,80%,100% { opacity:0.3; transform:translateY(0); }
+        40% { opacity:1; transform:translateY(-5px); }
+    }
+
+    /* ── MARQUEE ── */
+    .marquee-band {
+        background: var(--amber);
+        overflow: hidden;
+        padding: 11px 0;
+        white-space: nowrap;
+    }
+    .marquee-track {
+        display: inline-flex;
+        animation: marquee 22s linear infinite;
+    }
+    .marquee-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        padding: 0 36px;
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--ink);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    .marquee-dot { width: 4px; height: 4px; border-radius: 50%; background: rgba(0,0,0,0.3); flex-shrink: 0; }
+    @keyframes marquee { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+
+    /* ── OFFER STRIP ── */
+    .offer-strip {
+        margin: 0 40px;
+        border-radius: 28px;
+        background: var(--teal-deep);
+        padding: 52px 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+    .offer-strip::before {
+        content: '';
+        position: absolute;
+        width: 400px; height: 400px;
+        border-radius: 50%;
+        background: rgba(26,167,164,0.1);
+        right: -80px; top: -120px;
+        pointer-events: none;
+    }
+    .offer-pill {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        background: rgba(232,160,48,0.15);
+        color: var(--amber);
+        border: 1px solid rgba(232,160,48,0.3);
+        padding: 5px 16px;
+        border-radius: 50px;
+        margin-bottom: 16px;
+    }
+    .offer-strip h3 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.15;
+    }
+    .offer-strip p { font-size: 14px; color: rgba(255,255,255,0.55); margin-top: 10px; font-weight: 300; }
+    .offer-btn {
+        flex-shrink: 0;
+        background: var(--amber);
+        color: var(--ink);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 15px 32px;
+        border-radius: 50px;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+        white-space: nowrap;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .offer-btn:hover { background: #f5b040; transform: translateY(-2px); color: var(--ink); }
+
+    @media (max-width: 768px) {
+        .offer-strip { flex-direction: column; text-align: center; margin: 0 20px; padding: 36px 28px; }
+        .hero { padding: 70px 24px 100px; }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
+    <div class="hero-wave-top"></div>
+
+    <div class="hero-eyebrow">Ocean-to-Table · Dumaguete City, PH</div>
+    <h1>The <em>freshest</em><br>catch on your<br>doorstep.</h1>
+    <p class="hero-sub">Sustainably sourced seafood — delivered in under 2 hours, every time.</p>
+
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:0;">
+        {% if app.user %}
+            <a href="{{ path('app_dashboard') }}" class="btn-primary-sf">
+                Go to Dashboard <i class="fas fa-arrow-right"></i>
+            </a>
+        {% else %}
+            <a href="{{ path('app_login') }}" class="btn-primary-sf">
+                Order Now <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="{{ path('app_about') }}" class="btn-ghost-sf">Learn More</a>
+        {% endif %}
+    </div>
+
+    <div class="hero-scroll-indicator">
+        <div class="scroll-dot"></div>
+        <div class="scroll-dot"></div>
+        <div class="scroll-dot"></div>
+    </div>
+</div>
+
+<!-- MARQUEE BAND -->
+<div class="marquee-band">
+    <div class="marquee-track">
+        <span class="marquee-item">Fresh Daily Catch <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Free Delivery on ₱999+ <span class="marquee-dot"></span></span>
+        <span class="marquee-item">15% Off First Order <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Eco-Friendly Packaging <span class="marquee-dot"></span></span>
+        <span class="marquee-item">24/7 Support <span class="marquee-dot"></span></span>
+        <span class="marquee-item">100% Traceable Sources <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Fresh Daily Catch <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Free Delivery on ₱999+ <span class="marquee-dot"></span></span>
+        <span class="marquee-item">15% Off First Order <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Eco-Friendly Packaging <span class="marquee-dot"></span></span>
+        <span class="marquee-item">24/7 Support <span class="marquee-dot"></span></span>
+        <span class="marquee-item">100% Traceable Sources <span class="marquee-dot"></span></span>
+    </div>
+</div>
+
+<!-- OFFER STRIP -->
+<div class="offer-strip" style="margin:90px 40px 0;">
+    <div>
+        <div class="offer-pill">Limited Time</div>
+        <h3>Fresh Deals,<br>Every Single Day.</h3>
+        <p>15% off your first order + free delivery when you spend ₱999 or more.</p>
+    </div>
+    {% if app.user %}
+        <a href="{{ path('app_dashboard') }}" class="offer-btn">Shop Now &rarr;</a>
+    {% else %}
+        <a href="{{ path('app_login') }}" class="offer-btn">Claim Offer &rarr;</a>
+    {% endif %}
+</div>
+
+{% endblock %}

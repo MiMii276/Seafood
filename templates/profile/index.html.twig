@@ -1,0 +1,487 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Profile - Seafoodie{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    /* Hide footer */
+    .footer {
+        display: none !important;
+    }
+
+    body {
+        background: linear-gradient(135deg, #f5f7fc 0%, #eef2f8 100%);
+        min-height: 100vh;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* Main Wrapper */
+    .profile-wrapper {
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1.5rem;
+    }
+
+    /* Premium Card */
+    .profile-card {
+        background: #ffffff;
+        border-radius: 32px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        max-width: 550px;
+        width: 100%;
+        overflow: hidden;
+        animation: slideUp 0.5s ease;
+        transition: all 0.3s ease;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Premium Header */
+    .profile-header {
+        background: linear-gradient(135deg, #0a2b2e 0%, #1f7a8c 50%, #0f2e3a 100%);
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    .profile-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+        background-size: 40px 40px;
+        animation: slowDrift 60s linear infinite;
+    }
+
+    @keyframes slowDrift {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(40px, 40px); }
+    }
+
+    .profile-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #f4a942, #1f7a8c, #f4a942);
+        background-size: 200% 100%;
+        animation: gradientShift 3s ease infinite;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Avatar Section */
+    .avatar-wrapper {
+        position: relative;
+        z-index: 1;
+        margin-bottom: 1rem;
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+        backdrop-filter: blur(10px);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        border: 3px solid rgba(255,255,255,0.3);
+        transition: all 0.3s ease;
+    }
+
+    .profile-card:hover .profile-avatar {
+        transform: scale(1.05);
+        border-color: rgba(244, 169, 66, 0.6);
+    }
+
+    .profile-avatar i {
+        font-size: 3rem;
+        color: white;
+    }
+
+    .profile-name {
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0.75rem 0 0.25rem;
+        font-family: 'Playfair Display', serif;
+        letter-spacing: -0.3px;
+    }
+
+    .profile-role {
+        display: inline-block;
+        padding: 0.3rem 1rem;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        margin-top: 0.5rem;
+    }
+
+    .role-badge {
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(5px);
+        color: white;
+    }
+
+    /* Profile Body */
+    .profile-body {
+        padding: 2rem;
+    }
+
+    /* Info Items */
+    .info-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 20px;
+        margin-bottom: 1rem;
+        transition: all 0.2s ease;
+        border: 1px solid #eef2f8;
+    }
+
+    .info-item:hover {
+        background: #ffffff;
+        border-color: #1f7a8c;
+        transform: translateX(5px);
+        box-shadow: 0 4px 12px rgba(31, 122, 140, 0.1);
+    }
+
+    .info-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, rgba(31,122,140,0.1), rgba(244,169,66,0.05));
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+    }
+
+    .info-icon i {
+        font-size: 1.25rem;
+        color: #1f7a8c;
+    }
+
+    .info-content {
+        flex: 1;
+    }
+
+    .info-label {
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #94a3b8;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1e2a3e;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-edit {
+        flex: 1;
+        background: linear-gradient(135deg, #1f7a8c, #0a5c6b);
+        color: white;
+        border: none;
+        padding: 0.85rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-edit::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-edit:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .btn-edit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px -8px rgba(31, 122, 140, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-back {
+        flex: 1;
+        background: transparent;
+        color: #64748b;
+        border: 2px solid #e2e8f0;
+        padding: 0.85rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-back:hover {
+        background: #f8fafc;
+        border-color: #1f7a8c;
+        color: #1f7a8c;
+        text-decoration: none;
+        transform: translateY(-1px);
+    }
+
+    .btn-logout {
+        flex: 1;
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        border: none;
+        padding: 0.85rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .btn-logout::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-logout:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .btn-logout:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px -8px rgba(220, 38, 38, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    /* Member Since Badge */
+    .member-since {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eef2f8;
+        font-size: 0.7rem;
+        color: #94a3b8;
+    }
+
+    .member-since i {
+        margin-right: 0.3rem;
+        color: #1f7a8c;
+    }
+
+    /* Responsive */
+    @media (max-width: 576px) {
+        .profile-wrapper {
+            padding: 1rem;
+        }
+        .profile-header {
+            padding: 1.5rem;
+        }
+        .profile-body {
+            padding: 1.5rem;
+        }
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+        }
+        .profile-avatar i {
+            font-size: 2.2rem;
+        }
+        .profile-name {
+            font-size: 1.25rem;
+        }
+        .info-item {
+            padding: 0.75rem;
+        }
+        .info-icon {
+            width: 40px;
+            height: 40px;
+        }
+        .info-icon i {
+            font-size: 1rem;
+        }
+        .action-buttons {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="profile-wrapper">
+    <div class="profile-card">
+        <div class="profile-header">
+            <div class="avatar-wrapper">
+                <div class="profile-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            </div>
+            <h2 class="profile-name">{{ user.name }}</h2>
+            <div>
+                <span class="profile-role role-badge">
+                    {% if 'ROLE_ADMIN' in user.roles %}
+                        <i class="fas fa-crown"></i> Administrator
+                    {% elseif 'ROLE_STAFF' in user.roles %}
+                        <i class="fas fa-briefcase"></i> Staff Member
+                    {% else %}
+                        <i class="fas fa-user"></i> Customer
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <div class="profile-body">
+            <!-- Email Info -->
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="info-content">
+                    <div class="info-label">Email Address</div>
+                    <div class="info-value">{{ user.email }}</div>
+                </div>
+            </div>
+
+            <!-- Account Status -->
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-circle"></i>
+                </div>
+                <div class="info-content">
+                    <div class="info-label">Account Status</div>
+                    <div class="info-value">
+                        {% if user.isActive %}
+                            <span style="color: #10b981;">
+                                <i class="fas fa-check-circle"></i> Active
+                            </span>
+                        {% else %}
+                            <span style="color: #ef4444;">
+                                <i class="fas fa-ban"></i> Inactive
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member Since -->
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="info-content">
+                    <div class="info-label">Member Since</div>
+                    <div class="info-value">
+                        {{ user.createdAt ? user.createdAt|date('F d, Y') : 'N/A' }}
+                        {% if user.createdAt %}
+                            <span style="font-size: 0.7rem; color: #94a3b8;">
+                                ({{ user.createdAt|date('Y') }})
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="{{ path('app_user_edit', {id: user.id}) }}" class="btn-edit">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </a>
+                <a href="{{ path('app_dashboard') }}" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+
+            <!-- Logout Button Row -->
+            <div class="action-buttons">
+                <a href="/force-logout" class="btn-logout" onclick="return confirm('Are you sure you want to logout?')">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+
+            <!-- Member Since Decorative -->
+            <div class="member-since">
+                <i class="fas fa-fish"></i> Seafoodie Member
+                <i class="fas fa-heart" style="color: #ef4444; margin-left: 0.5rem;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

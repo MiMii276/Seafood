@@ -1,0 +1,38 @@
+FROM php:8.3-fpm
+
+RUN apt-get update && apt-get install -y \
+    nginx \
+    curl \
+    git \
+    unzip \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libicu-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) pdo_mysql mysqli gd intl
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /app
+COPY . .
+
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
+
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --optimize-autoloader --no-dev
+
+# FIX: Target the correct Symfony var directory structure
+RUN chown -R www-data:www-data /app/var /app/public && chmod -R 775 /app/var
+
+COPY config/nginx/railway.conf /etc/nginx/nginx.conf
+
+# FIX: Pass a mock port to nginx -t so it compiles successfully during image build
+RUN mkdir -p /var/log/nginx /var/run/php-fpm && PORT=80 nginx -t
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:$PORT/ || exit 1
+
+CMD ["sh", "-c", "php bin/console doctrine:migrations:migrate --no-interaction --env=prod && php-fpm -D && nginx -g 'daemon off;'"]

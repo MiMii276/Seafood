@@ -1,0 +1,199 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}About Seafoodie - Our Story & Values{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    * { box-sizing: border-box; }
+
+    :root {
+        --teal-deep: #073B3A;
+        --teal-mid: #0D6E6C;
+        --teal-bright: #1AA7A4;
+        --teal-light: #C8EFEE;
+        --amber: #E8A030;
+        --cream: #FAF8F3;
+        --sand: #EFE9D9;
+        --ink: #0D1F1E;
+        --muted: #556B6A;
+    }
+
+    body {
+        background: var(--cream);
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+        background: var(--teal-deep);
+        color: #fff;
+        padding: 120px 40px 60px;
+        text-align: center;
+        margin-top: -56px;
+    }
+
+    .page-header h1 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 20px;
+    }
+
+    .page-header p {
+        font-size: 16px;
+        color: rgba(255,255,255,0.7);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* ── SECTION SHELL ── */
+    .sf-section { padding: 90px 40px; }
+    .sf-section-sand { background: var(--sand); }
+    .sf-section-dark { background: var(--teal-deep); color: #fff; }
+
+    .section-tag {
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--teal-bright);
+        display: block;
+        margin-bottom: 14px;
+    }
+    .sf-section-dark .section-tag { color: var(--teal-bright); }
+
+    .section-h {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(2.2rem, 4vw, 3.2rem);
+        font-weight: 700;
+        color: var(--ink);
+        line-height: 1.1;
+    }
+    .section-h em { font-style: italic; color: var(--teal-mid); }
+    .sf-section-dark .section-h { color: #fff; }
+    .sf-section-dark .section-h em { color: var(--amber); }
+
+    .section-lead {
+        font-size: 15px;
+        color: var(--muted);
+        margin-top: 12px;
+        font-weight: 300;
+        line-height: 1.75;
+        max-width: 540px;
+    }
+    .sf-section-dark .section-lead { color: rgba(255,255,255,0.5); }
+
+    /* ── ABOUT ── */
+    .about-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 70px;
+        align-items: center;
+        margin-top: 52px;
+    }
+
+    .about-checks { margin-top: 30px; display: flex; flex-direction: column; gap: 18px; }
+    .check-item { display: flex; align-items: flex-start; gap: 14px; }
+    .check-icon {
+        width: 24px; height: 24px; border-radius: 50%;
+        background: var(--teal-light);
+        display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+    }
+    .check-icon svg { width: 11px; height: 11px; stroke: var(--teal-mid); stroke-width: 2.5; fill: none; }
+    .check-title { font-size: 14px; font-weight: 500; color: var(--ink); }
+    .check-desc { font-size: 12px; color: var(--muted); margin-top: 2px; font-weight: 300; }
+
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .stat-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 28px 20px;
+        border: 1px solid rgba(0,0,0,0.06);
+        text-align: center;
+    }
+    .stat-num {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: var(--teal-mid);
+        line-height: 1;
+    }
+    .stat-label { font-size: 12px; color: var(--muted); margin-top: 8px; letter-spacing: 0.04em; }
+
+    @media (max-width: 768px) {
+        .about-grid { grid-template-columns: 1fr; gap: 50px; }
+        .page-header { padding: 80px 24px 40px; }
+        .sf-section { padding: 60px 24px; }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+    <h1>About Seafoodie</h1>
+    <p>Our commitment to freshness, sustainability, and your satisfaction</p>
+</div>
+
+<!-- ABOUT SECTION -->
+<section class="sf-section">
+    <span class="section-tag">Our Story</span>
+    <div class="about-grid">
+        <div>
+            <h2 class="section-h">Pure catch,<br><em>no compromise.</em></h2>
+            <p class="section-lead">We partner with local fishermen and sustainable farms across Dumaguete to bring you the highest quality seafood — handled with care from net to your kitchen.</p>
+            <div class="about-checks">
+                <div class="check-item">
+                    <div class="check-icon">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div>
+                        <div class="check-title">24h ocean-to-table promise</div>
+                        <div class="check-desc">From boat to your door, same day.</div>
+                    </div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div>
+                        <div class="check-title">100% traceable sources</div>
+                        <div class="check-desc">Know exactly where your seafood comes from.</div>
+                    </div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div>
+                        <div class="check-title">Eco-friendly packaging</div>
+                        <div class="check-desc">Recyclable, biodegradable materials throughout.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-num">500+</div>
+                <div class="stat-label">Happy Deliveries</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num">4.9</div>
+                <div class="stat-label">Customer Rating</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num">24/7</div>
+                <div class="stat-label">Support</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num">15+</div>
+                <div class="stat-label">Varieties</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

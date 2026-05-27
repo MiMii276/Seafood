@@ -1,0 +1,169 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Meet Our Team - The People Behind Seafoodie{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    * { box-sizing: border-box; }
+
+    :root {
+        --teal-deep: #073B3A;
+        --teal-mid: #0D6E6C;
+        --teal-bright: #1AA7A4;
+        --teal-light: #C8EFEE;
+        --amber: #E8A030;
+        --cream: #FAF8F3;
+        --sand: #EFE9D9;
+        --ink: #0D1F1E;
+        --muted: #556B6A;
+    }
+
+    body {
+        background: var(--cream);
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+        background: var(--teal-deep);
+        color: #fff;
+        padding: 120px 40px 60px;
+        text-align: center;
+        margin-top: -56px;
+    }
+
+    .page-header h1 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 20px;
+    }
+
+    .page-header p {
+        font-size: 16px;
+        color: rgba(255,255,255,0.7);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* ── SECTION SHELL ── */
+    .sf-section { padding: 90px 40px; }
+    .sf-section-sand { background: var(--sand); }
+
+    .section-tag {
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--teal-bright);
+        display: block;
+        margin-bottom: 14px;
+    }
+
+    .section-h {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(2.2rem, 4vw, 3.2rem);
+        font-weight: 700;
+        color: var(--ink);
+        line-height: 1.1;
+    }
+
+    .section-h em { font-style: italic; color: var(--teal-mid); }
+
+    /* ── TEAM ── */
+    .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 52px; }
+    
+    .team-card {
+        background: #fff;
+        border-radius: 22px;
+        padding: 38px 26px;
+        text-align: center;
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: transform 0.25s, box-shadow 0.25s;
+    }
+    
+    .team-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px rgba(7,59,58,0.1);
+    }
+    
+    .team-avatar {
+        width: 76px; height: 76px;
+        border-radius: 50%;
+        background: var(--teal-light);
+        margin: 0 auto 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--teal-mid);
+    }
+    
+    .team-card h4 { font-size: 16px; font-weight: 500; color: var(--ink); margin-bottom: 5px; }
+    .team-card p { font-size: 13px; color: var(--muted); font-weight: 300; }
+    
+    .team-tag {
+        margin-top: 14px;
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: var(--teal-light);
+        color: var(--teal-mid);
+        padding: 5px 16px;
+        border-radius: 50px;
+    }
+
+    @media (max-width: 768px) {
+        .team-grid { grid-template-columns: 1fr 1fr; }
+        .page-header { padding: 80px 24px 40px; }
+        .sf-section { padding: 60px 24px; }
+    }
+
+    @media (max-width: 480px) {
+        .team-grid { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+    <h1>Meet Our Team</h1>
+    <p>The passionate people behind every fresh catch</p>
+</div>
+
+<!-- TEAM SECTION -->
+<section class="sf-section sf-section-sand">
+    <span class="section-tag">The Team</span>
+    <h2 class="section-h">Meet the people<br><em>behind the catch.</em></h2>
+    
+    <div class="team-grid">
+        <div class="team-card">
+            <div class="team-avatar">RS</div>
+            <h4>Rona Mae Sotillo</h4>
+            <p>System Manager & Quality Lead</p>
+            <span class="team-tag">Operations</span>
+        </div>
+        <div class="team-card">
+            <div class="team-avatar">AM</div>
+            <h4>anoR eaM</h4>
+            <p>Sourcing Director</p>
+            <span class="team-tag">Sourcing</span>
+        </div>
+        <div class="team-card">
+            <div class="team-avatar">MR</div>
+            <h4>Mae Rona</h4>
+            <p>Logistics Head</p>
+            <span class="team-tag">Delivery</span>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

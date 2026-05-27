@@ -1,0 +1,22 @@
+# Explicit routes
+app_login:
+    path: /login
+    controller: App\Controller\SecurityController::login
+
+app_logout:
+    path: /logout
+    controller: App\Controller\SecurityController::logout
+
+app_dashboard:
+    path: /dashboard
+    controller: App\Controller\DashboardController::index
+
+# Load all controllers with PHP 8 attributes
+controllers:
+    resource: '../src/Controller/'
+    type: attribute
+
+# API routes
+api_login:
+    path: /api/login
+    methods: [POST]

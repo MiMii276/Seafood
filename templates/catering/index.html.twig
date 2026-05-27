@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Caterings - Seafoodie{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body {
+        background: linear-gradient(135deg, #093839, #208396);
+        min-height: 100vh;
+    }
+
+    .page-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-teal {
+        background-color: #1f7a8c;
+        color: #fff;
+    }
+
+    .btn-teal:hover {
+        background-color: #16636f;
+        color: #fff;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(31, 122, 140, 0.05);
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="page-card">
+
+        <h1 class="mb-4">Catering Records</h1>
+
+        <!-- Add New Catering Button -->
+        <div class="mb-3">
+            <a href="{{ path('app_catering_new') }}" class="btn btn-teal">+ Add New Catering</a>
+        </div>
+
+        <!-- Caterings Table -->
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Event Date</th>
+                        <th>Guests</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Created By</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for catering in caterings %}
+                        <tr>
+                            <td>{{ catering.name }}</td>
+                            <td>{{ catering.eventDate|date('M d, Y') }}</td>
+                            <td>{{ catering.numberOfGuests }}</td>
+                            <td>₱{{ catering.price|number_format(2, '.', ',') }}</td>
+                            <td>{{ catering.status }}</td>
+                            <td>{{ catering.createdBy.name }}</td>
+                            <td class="text-center">
+                                <div class="d-flex flex-wrap gap-1 justify-content-center">
+                                    <a href="{{ path('app_catering_show', {'id': catering.id}) }}" class="btn btn-sm btn-info">View</a>
+                                    
+                                    {% if catering.createdBy.id == app.user.id or is_granted('ROLE_ADMIN') %}
+                                        <a href="{{ path('app_catering_edit', {'id': catering.id}) }}" class="btn btn-sm btn-teal">Edit</a>
+
+                                        <form method="post" action="{{ path('app_catering_delete', {'id': catering.id}) }}" 
+                                              onsubmit="return confirm('⚠️ You are about to delete this catering. Are you sure?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ catering.id) }}">
+                                            <button class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-4">
+                                No caterings found.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

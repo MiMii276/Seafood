@@ -1,0 +1,200 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact Seafoodie - Get in Touch{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    * { box-sizing: border-box; }
+
+    :root {
+        --teal-deep: #073B3A;
+        --teal-mid: #0D6E6C;
+        --teal-bright: #1AA7A4;
+        --teal-light: #C8EFEE;
+        --amber: #E8A030;
+        --cream: #FAF8F3;
+        --sand: #EFE9D9;
+        --ink: #0D1F1E;
+        --muted: #556B6A;
+    }
+
+    body {
+        background: var(--cream);
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── SECTION SHELL ── */
+    .sf-section { padding: 90px 40px; }
+    .sf-section-dark { background: var(--teal-deep); color: #fff; }
+
+    .section-tag {
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--teal-bright);
+        display: block;
+        margin-bottom: 14px;
+    }
+    .sf-section-dark .section-tag { color: var(--teal-bright); }
+
+    .section-h {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(2.2rem, 4vw, 3.2rem);
+        font-weight: 700;
+        color: var(--ink);
+        line-height: 1.1;
+    }
+    .section-h em { font-style: italic; color: var(--teal-mid); }
+    .sf-section-dark .section-h { color: #fff; }
+    .sf-section-dark .section-h em { color: var(--amber); }
+
+    .section-lead {
+        font-size: 15px;
+        color: var(--muted);
+        margin-top: 12px;
+        font-weight: 300;
+        line-height: 1.75;
+        max-width: 540px;
+    }
+    .sf-section-dark .section-lead { color: rgba(255,255,255,0.5); }
+
+    /* ── CONTACT ── */
+    .contact-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; margin-top: 56px; }
+    
+    .contact-info-item {
+        display: flex; align-items: center; gap: 16px;
+        padding: 20px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    
+    .contact-info-item:last-child { border-bottom: none; }
+    
+    .ci-icon {
+        width: 44px; height: 44px; border-radius: 13px;
+        background: rgba(26,167,164,0.15);
+        display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    
+    .ci-icon svg { width: 18px; height: 18px; stroke: var(--teal-bright); stroke-width: 1.8; fill: none; }
+    .ci-label { font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 3px; }
+    .ci-val { font-size: 14px; color: #fff; }
+
+    .contact-form-wrap {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 22px;
+        padding: 36px;
+    }
+    
+    .cf-field { margin-bottom: 16px; }
+    
+    .cf-field input, .cf-field textarea {
+        width: 100%;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 12px;
+        padding: 14px 18px;
+        color: #fff;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+    
+    .cf-field input::placeholder, .cf-field textarea::placeholder { color: rgba(255,255,255,0.3); }
+    .cf-field input:focus, .cf-field textarea:focus { border-color: rgba(26,167,164,0.5); }
+    .cf-field textarea { resize: none; }
+    
+    .cf-submit {
+        width: 100%;
+        background: var(--amber);
+        color: var(--ink);
+        border: none;
+        border-radius: 12px;
+        padding: 15px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    
+    .cf-submit:hover { background: #f5b040; }
+
+    @media (max-width: 768px) {
+        .contact-inner { grid-template-columns: 1fr; gap: 50px; }
+        .sf-section { padding: 60px 24px; }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<!-- CONTACT SECTION -->
+<section class="sf-section sf-section-dark">
+    <span class="section-tag">Get in Touch</span>
+    <h2 class="section-h">Let's talk<br><em>seafood.</em></h2>
+    <p class="section-lead">Inquiries, bulk orders, or just want to say hi — our team is always ready.</p>
+
+    <div class="contact-inner">
+        <div>
+            <div class="contact-info-item">
+                <div class="ci-icon">
+                    <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.6 3.45 2 2 0 0 1 3.57 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.08 6.08l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </div>
+                <div>
+                    <div class="ci-label">Phone</div>
+                    <div class="ci-val">+63 912 345 6789</div>
+                </div>
+            </div>
+            <div class="contact-info-item">
+                <div class="ci-icon">
+                    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <div>
+                    <div class="ci-label">Location</div>
+                    <div class="ci-val">Dumaguete City, Philippines</div>
+                </div>
+            </div>
+            <div class="contact-info-item">
+                <div class="ci-icon">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div>
+                    <div class="ci-label">Hours</div>
+                    <div class="ci-val">24/7 — Always available</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-form-wrap">
+            <form id="contactForm">
+                <div class="cf-field">
+                    <input type="text" placeholder="Your full name" required>
+                </div>
+                <div class="cf-field">
+                    <input type="email" placeholder="Email address" required>
+                </div>
+                <div class="cf-field">
+                    <textarea rows="4" placeholder="Your message..."></textarea>
+                </div>
+                <button type="submit" class="cf-submit">Send Message &nbsp;✈</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.getElementById('contactForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    alert('✨ Message sent! Our team will get back to you soon.');
+    this.reset();
+});
+</script>
+{% endblock %}
