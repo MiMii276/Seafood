@@ -1,0 +1,432 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register — Seafoodie{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    .register-wrapper {
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--teal-deep) 0%, var(--teal-mid) 100%);
+        padding: 2rem 1rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Decorative orbs matching dashboard */
+    .register-orb {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0.08;
+    }
+    .register-orb-1 {
+        width: 500px;
+        height: 500px;
+        background: var(--teal-bright);
+        top: -150px;
+        left: -100px;
+    }
+    .register-orb-2 {
+        width: 380px;
+        height: 380px;
+        background: var(--amber);
+        bottom: -80px;
+        right: -60px;
+    }
+    .register-orb-3 {
+        width: 220px;
+        height: 220px;
+        background: var(--teal-bright);
+        bottom: 30%;
+        left: 20%;
+        opacity: 0.05;
+    }
+
+    /* Main Card */
+    .register-card {
+        background: #fff;
+        border-radius: 32px;
+        padding: 2rem 2rem 1.8rem;
+        max-width: 520px;
+        width: 100%;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        position: relative;
+        z-index: 2;
+        transition: transform 0.3s ease;
+        animation: fadeInUp 0.5s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Header with accent line */
+    .register-header {
+        text-align: center;
+        margin-bottom: 1.75rem;
+        position: relative;
+    }
+    .register-header h2 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--ink);
+        margin-bottom: 0.25rem;
+    }
+    .register-header h2 em {
+        font-style: italic;
+        color: var(--teal-mid);
+    }
+    .register-subtitle {
+        font-size: 0.8rem;
+        color: var(--muted);
+        letter-spacing: 0.03em;
+    }
+    .register-accent {
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--teal-bright), var(--amber));
+        border-radius: 3px;
+        margin: 0.75rem auto 0;
+    }
+
+    /* Form Groups */
+    .form-group {
+        margin-bottom: 1.2rem;
+    }
+    .form-group label {
+        font-weight: 600;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+    .form-control {
+        width: 100%;
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+        font-family: 'DM Sans', sans-serif;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 16px;
+        transition: all 0.2s ease;
+        background: #fff;
+    }
+    .form-control:focus {
+        border-color: var(--teal-bright);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(26, 167, 164, 0.1);
+    }
+    .password-hint {
+        font-size: 0.65rem;
+        color: var(--muted);
+        margin-top: 0.35rem;
+        display: block;
+    }
+
+    /* Role Cards (matching dashboard card style) */
+    .role-cards {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 0.25rem;
+    }
+    .role-option {
+        flex: 1;
+        cursor: pointer;
+    }
+    .role-option input {
+        display: none;
+    }
+    .role-card {
+        border: 1.5px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 0.9rem 0.5rem;
+        text-align: center;
+        transition: all 0.2s ease;
+        background: #fff;
+        cursor: pointer;
+    }
+    .role-option input:checked + .role-card {
+        border-color: var(--teal-bright);
+        background: linear-gradient(135deg, rgba(26,167,164,0.05), rgba(232,160,48,0.03));
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(7,59,58,0.1);
+    }
+    .role-icon {
+        font-size: 1.6rem;
+        margin-bottom: 0.4rem;
+    }
+    .role-title {
+        font-weight: 700;
+        font-size: 0.75rem;
+        margin-bottom: 0.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        color: var(--ink);
+    }
+    .role-desc {
+        font-size: 0.6rem;
+        color: var(--muted);
+    }
+    .info-badge {
+        background: var(--amber-light);
+        color: var(--amber);
+        padding: 0.15rem 0.4rem;
+        border-radius: 20px;
+        font-size: 0.55rem;
+        font-weight: 600;
+    }
+
+    /* Button */
+    .btn-register {
+        background: linear-gradient(135deg, var(--teal-deep), var(--teal-mid));
+        color: white;
+        border: none;
+        padding: 0.85rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        margin-top: 0.5rem;
+        font-family: 'DM Sans', sans-serif;
+        letter-spacing: 0.03em;
+    }
+    .btn-register:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px -5px rgba(7,59,58,0.4);
+        background: linear-gradient(135deg, #0a4a49, var(--teal-mid));
+    }
+
+    /* Alerts */
+    .alert-success, .alert-danger {
+        padding: 0.75rem 1rem;
+        border-radius: 16px;
+        margin-bottom: 1.25rem;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+        border-left: 4px solid #10b981;
+    }
+    .alert-danger {
+        background: #fee2e2;
+        color: #dc2626;
+        border-left: 4px solid #dc2626;
+    }
+
+    /* Login Link */
+    .login-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1.2rem;
+        border-top: 1px solid #e2e8f0;
+    }
+    .login-link p {
+        margin: 0;
+        font-size: 0.8rem;
+        color: var(--muted);
+    }
+    .login-link a {
+        color: var(--teal-mid);
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s;
+    }
+    .login-link a:hover {
+        color: var(--amber);
+    }
+
+    /* Back Button (dashboard style) */
+    .back-to-landing {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        background: var(--cream);
+        color: var(--teal-deep);
+        text-decoration: none;
+        padding: 0.7rem 1.2rem;
+        border-radius: 50px;
+        font-weight: 500;
+        font-size: 0.8rem;
+        transition: all 0.25s ease;
+        border: 1px solid #e2e8f0;
+        margin-top: 1rem;
+        width: 100%;
+        font-family: 'DM Sans', sans-serif;
+    }
+    .back-to-landing:hover {
+        background: var(--teal-deep);
+        color: white;
+        border-color: var(--teal-deep);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(7,59,58,0.15);
+    }
+    .back-to-landing svg {
+        width: 18px;
+        height: 18px;
+        transition: transform 0.2s ease;
+    }
+    .back-to-landing:hover svg {
+        transform: translateX(-4px);
+    }
+
+    /* Responsive */
+    @media (max-width: 520px) {
+        .register-card {
+            padding: 1.5rem;
+        }
+        .register-header h2 {
+            font-size: 1.8rem;
+        }
+        .role-cards {
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .role-card {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-align: left;
+            padding: 0.7rem 1rem;
+        }
+        .role-icon {
+            margin-bottom: 0;
+            font-size: 1.3rem;
+        }
+        .role-title, .role-desc {
+            text-align: left;
+        }
+        .role-title {
+            justify-content: flex-start;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="register-wrapper">
+    <!-- Decorative orbs -->
+    <div class="register-orb register-orb-1"></div>
+    <div class="register-orb register-orb-2"></div>
+    <div class="register-orb register-orb-3"></div>
+
+    <div class="register-card">
+        <div class="register-header">
+            <h2>Create <em>account</em></h2>
+            <div class="register-accent"></div>
+            <p class="register-subtitle">Join the Seafoodie family</p>
+        </div>
+        
+        {% for message in app.flashes('success') %}
+            <div class="alert-success">
+                <i class="fas fa-check-circle"></i> {{ message }}
+            </div>
+        {% endfor %}
+        
+        {% for message in app.flashes('error') %}
+            <div class="alert-danger">
+                <i class="fas fa-exclamation-triangle"></i> {{ message }}
+            </div>
+        {% endfor %}
+        
+        <form method="post">
+            <div class="form-group">
+                <label><i class="fas fa-user me-1"></i> Full name</label>
+                <input type="text" name="name" class="form-control" placeholder="John Doe" required autofocus>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-envelope me-1"></i> Email</label>
+                <input type="email" name="email" class="form-control" placeholder="you@example.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-lock me-1"></i> Password</label>
+                <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                <span class="password-hint">✓ Minimum 6 characters</span>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-check-circle me-1"></i> Confirm password</label>
+                <input type="password" name="confirm_password" class="form-control" placeholder="••••••••" required>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-tag me-1"></i> Account type</label>
+                <div class="role-cards">
+                    <label class="role-option">
+                        <input type="radio" name="role" value="ROLE_USER" checked>
+                        <div class="role-card">
+                            <div class="role-icon">👤</div>
+                            <div>
+                                <div class="role-title">Customer</div>
+                                <div class="role-desc">Browse & order fresh seafood</div>
+                            </div>
+                        </div>
+                    </label>
+                    
+                    <label class="role-option">
+                        <input type="radio" name="role" value="ROLE_STAFF">
+                        <div class="role-card">
+                            <div class="role-icon">🛒</div>
+                            <div>
+                                <div class="role-title">Staff <span class="info-badge">Limited</span></div>
+                                <div class="role-desc">Manage products & orders</div>
+                            </div>
+                        </div>
+                    </label>
+                    
+                    <label class="role-option">
+                        <input type="radio" name="role" value="ROLE_ADMIN">
+                        <div class="role-card">
+                            <div class="role-icon">👑</div>
+                            <div>
+                                <div class="role-title">Admin <span class="info-badge">Full</span></div>
+                                <div class="role-desc">Complete system control</div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-register">
+                <i class="fas fa-user-plus me-2"></i> Sign up
+            </button>
+        </form>
+        
+        <div class="login-link">
+            <p>Already have an account? <a href="{{ path('app_login') }}">Log in →</a></p>
+        </div>
+
+        <a href="{{ path('app_home') }}" class="back-to-landing">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Home
+        </a>
+    </div>
+</div>
+{% endblock %}

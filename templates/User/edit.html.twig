@@ -3,97 +3,429 @@
 {% block title %}Edit User - Seafoodie{% endblock %}
 
 {% block stylesheets %}
+{{ parent() }}
 <style>
+    /* Hide footer */
+    .footer {
+        display: none !important;
+    }
+
     body {
-        background: linear-gradient(135deg, #093839, #208396);
+        background: linear-gradient(135deg, #f5f7fc 0%, #eef2f8 100%);
         min-height: 100vh;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
-    .page-card {
+    /* Main Wrapper - tighter */
+    .edit-wrapper {
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+
+    /* Compact Card */
+    .edit-card {
         background: #ffffff;
-        border-radius: 14px;
-        padding: 35px;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        max-width: 600px;
-        margin: auto;
+        border-radius: 24px;
+        box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.1);
+        max-width: 520px;
+        width: 100%;
+        overflow: hidden;
+        animation: slideUp 0.4s ease;
     }
 
-    .form-control,
-    .form-select {
-        height: 45px;
-        border-radius: 8px;
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
-    .btn-teal {
-        background-color: #1f7a8c;
-        color: #fff;
-        padding: 10px 20px;
-        border-radius: 8px;
+    /* Compact Header */
+    .edit-header {
+        background: linear-gradient(135deg, #0a2b2e, #1f7a8c);
+        padding: 1.25rem 1.5rem;
+        position: relative;
+        text-align: center;
     }
 
-    .btn-teal:hover {
-        background-color: #16636f;
-        color: #fff;
+    .edit-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #f4a942, #1f7a8c, #f4a942);
     }
 
+    .header-icon {
+        width: 48px;
+        height: 48px;
+        background: rgba(255,255,255,0.15);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 0.6rem;
+    }
+
+    .header-icon i {
+        font-size: 1.3rem;
+        color: white;
+    }
+
+    .edit-header h2 {
+        color: white;
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: -0.2px;
+    }
+
+    .edit-header p {
+        color: rgba(255,255,255,0.75);
+        font-size: 0.7rem;
+        margin: 0.2rem 0 0;
+    }
+
+    /* Compact Form Body */
+    .form-body {
+        padding: 1.25rem 1.5rem 1.5rem;
+    }
+
+    /* Compact Form Groups */
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #64748b;
+        margin-bottom: 0.35rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .form-label i {
+        font-size: 0.7rem;
+        color: #1f7a8c;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.6rem 0.85rem;
+        font-size: 0.85rem;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        transition: all 0.2s ease;
+        background: #ffffff;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #1f7a8c;
+        box-shadow: 0 0 0 3px rgba(31, 122, 140, 0.1);
+    }
+
+    /* Password Hint */
+    .password-hint {
+        font-size: 0.6rem;
+        color: #94a3b8;
+        margin-top: 0.35rem;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .password-hint i {
+        font-size: 0.55rem;
+    }
+
+    /* Compact Role Box */
     .role-box {
-        border: 1px solid #dee2e6;
+        background: #fafcff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 0.75rem 1rem;
+        transition: all 0.2s ease;
+    }
+
+    .role-box:hover {
+        border-color: #1f7a8c;
+    }
+
+    /* Style for role checkboxes */
+    .role-box div {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .role-box label {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.85rem;
+        cursor: pointer;
+        padding: 0.25rem 0.5rem;
         border-radius: 8px;
-        padding: 15px;
+        transition: background 0.2s;
+    }
+
+    .role-box label:hover {
+        background: #f1f5f9;
+    }
+
+    .role-box input {
+        margin: 0;
+        cursor: pointer;
+        accent-color: #1f7a8c;
+    }
+
+    /* Compact Checkbox */
+    .custom-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.6rem 0.9rem;
+        background: #fafcff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .custom-checkbox:hover {
+        border-color: #1f7a8c;
+        background: #ffffff;
+    }
+
+    .custom-checkbox input {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: #1f7a8c;
+    }
+
+    .custom-checkbox label {
+        margin: 0;
+        cursor: pointer;
+        font-weight: 600;
+        color: #1e2a3e;
+        font-size: 0.85rem;
+    }
+
+    /* Error Styling */
+    .form-error {
+        color: #dc2626;
+        font-size: 0.65rem;
+        margin-top: 0.35rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    /* Action Buttons - Compact */
+    .action-buttons {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+        padding-top: 0.5rem;
+    }
+
+    .btn-save {
+        flex: 1;
+        background: linear-gradient(135deg, #1f7a8c, #0a5c6b);
+        color: white;
+        border: none;
+        padding: 0.65rem;
+        border-radius: 40px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        cursor: pointer;
+    }
+
+    .btn-save:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 14px -6px rgba(31, 122, 140, 0.4);
+        background: linear-gradient(135deg, #208396, #0f4a4b);
+    }
+
+    .btn-cancel {
+        flex: 1;
+        background: transparent;
+        color: #64748b;
+        border: 1.5px solid #e2e8f0;
+        padding: 0.65rem;
+        border-radius: 40px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+    }
+
+    .btn-cancel:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+        color: #475569;
+        text-decoration: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+        .form-body {
+            padding: 1rem 1.25rem 1.25rem;
+        }
+        .action-buttons {
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .header-icon {
+            width: 40px;
+            height: 40px;
+        }
+        .header-icon i {
+            font-size: 1.1rem;
+        }
+        .edit-header h2 {
+            font-size: 1.2rem;
+        }
+        .role-box div {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
     }
 </style>
 {% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <div class="page-card">
-
-        <h2 class="mb-4">Edit User</h2>
-
-        {{ form_start(form) }}
-
-        <!-- Full Name -->
-        <div class="mb-3">
-            {{ form_label(form.name, 'Full Name') }}
-            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
-            {{ form_errors(form.name) }}
-        </div>
-
-        <!-- Email -->
-        <div class="mb-3">
-            {{ form_label(form.email, 'Email Address') }}
-            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
-            {{ form_errors(form.email) }}
-        </div>
-
-        <!-- Roles -->
-        <div class="mb-3">
-            <label class="form-label">Role</label>
-            <div class="role-box">
-                {{ form_widget(form.roles) }}
+<div class="edit-wrapper">
+    <div class="edit-card">
+        <div class="edit-header">
+            <div class="header-icon">
+                <i class="fas fa-user-edit"></i>
             </div>
-            {{ form_errors(form.roles) }}
+            <h2>Edit User</h2>
+            <p>Update user information</p>
         </div>
 
-        <!-- Active -->
-        <div class="form-check mb-4">
-            {{ form_widget(form.isActive, {'attr': {'class': 'form-check-input'}}) }}
-            {{ form_label(form.isActive, 'Active', {'label_attr': {'class': 'form-check-label'}}) }}
-            {{ form_errors(form.isActive) }}
+        <div class="form-body">
+            {{ form_start(form) }}
+
+            <!-- Full Name -->
+            <div class="form-group">
+                <div class="form-label">
+                    <i class="fas fa-user"></i>
+                    <span>Full Name</span>
+                </div>
+                {{ form_widget(form.name, {'attr': {'class': 'form-control', 'placeholder': 'Enter full name'}}) }}
+                {% if form_errors(form.name) %}
+                    <div class="form-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ form_errors(form.name) }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <div class="form-label">
+                    <i class="fas fa-envelope"></i>
+                    <span>Email Address</span>
+                </div>
+                {{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'user@example.com'}}) }}
+                {% if form_errors(form.email) %}
+                    <div class="form-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ form_errors(form.email) }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Password Field (if exists in form) -->
+            {% if form.plainPassword is defined %}
+            <div class="form-group">
+                <div class="form-label">
+                    <i class="fas fa-lock"></i>
+                    <span>New Password</span>
+                </div>
+                {{ form_widget(form.plainPassword, {'attr': {'class': 'form-control', 'placeholder': 'Enter new password (optional)'}}) }}
+                <div class="password-hint">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Leave empty to keep current password</span>
+                </div>
+                {% if form_errors(form.plainPassword) %}
+                    <div class="form-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ form_errors(form.plainPassword) }}
+                    </div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <!-- Roles -->
+            <div class="form-group">
+                <div class="form-label">
+                    <i class="fas fa-tag"></i>
+                    <span>User Role</span>
+                </div>
+                <div class="role-box">
+                    {{ form_widget(form.roles) }}
+                </div>
+                {% if form_errors(form.roles) %}
+                    <div class="form-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ form_errors(form.roles) }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Active Status -->
+            <div class="form-group">
+                <div class="custom-checkbox">
+                    {{ form_widget(form.isActive) }}
+                    {{ form_label(form.isActive, 'Active Account', {'label_attr': {'class': 'form-check-label'}}) }}
+                </div>
+                {% if form_errors(form.isActive) %}
+                    <div class="form-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ form_errors(form.isActive) }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button type="submit" class="btn-save">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+                <a href="{{ path('app_user_index') }}" class="btn-cancel">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+
+            {{ form_end(form) }}
         </div>
-
-        <!-- Buttons -->
-        <div class="d-flex justify-content-between">
-            <button type="submit" class="btn btn-teal">
-                Save Changes
-            </button>
-            <a href="{{ path('app_user_index') }}" class="btn btn-outline-secondary">
-                Cancel
-            </a>
-        </div>
-
-        {{ form_end(form) }}
-
     </div>
 </div>
 {% endblock %}

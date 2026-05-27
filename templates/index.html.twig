@@ -1,0 +1,911 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fresh Seafood Delivered to Your Door{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+    * { box-sizing: border-box; }
+
+    :root {
+        --teal-deep: #073B3A;
+        --teal-mid: #0D6E6C;
+        --teal-bright: #1AA7A4;
+        --teal-light: #C8EFEE;
+        --amber: #E8A030;
+        --amber-light: #FDF0D5;
+        --cream: #FAF8F3;
+        --sand: #EFE9D9;
+        --ink: #0D1F1E;
+        --muted: #556B6A;
+    }
+
+    body {
+        background: var(--cream);
+        font-family: 'DM Sans', sans-serif;
+        overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+        position: relative;
+        background: var(--teal-deep);
+        min-height: 92vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        overflow: hidden;
+        padding: 80px 40px 100px;
+        margin-top: -56px;
+    }
+
+    .hero-wave-top {
+        position: absolute; top: 0; left: 0; right: 0; height: 5px;
+        background: linear-gradient(90deg, var(--teal-bright), var(--amber), var(--teal-bright));
+    }
+
+    .hero-orb {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.08;
+        pointer-events: none;
+    }
+    .hero-orb-1 { width: 500px; height: 500px; background: var(--teal-bright); top: -120px; left: -80px; }
+    .hero-orb-2 { width: 380px; height: 380px; background: var(--amber); bottom: -60px; right: -80px; }
+    .hero-orb-3 { width: 200px; height: 200px; background: var(--teal-bright); bottom: 60px; left: 35%; opacity: 0.05; }
+
+    .hero-eyebrow {
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--teal-bright);
+        background: rgba(26,167,164,0.12);
+        border: 1px solid rgba(26,167,164,0.3);
+        padding: 6px 18px;
+        border-radius: 50px;
+        margin-bottom: 28px;
+        display: inline-block;
+        position: relative;
+    }
+
+    .hero h1 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(3.2rem, 7vw, 5.5rem);
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.05;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .hero h1 em {
+        font-style: italic;
+        color: var(--amber);
+    }
+
+    .hero-sub {
+        font-size: 16px;
+        color: rgba(255,255,255,0.6);
+        font-weight: 300;
+        letter-spacing: 0.02em;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    .btn-primary-sf {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--amber);
+        color: var(--ink);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        padding: 14px 34px;
+        border-radius: 50px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+    }
+    .btn-primary-sf:hover { background: #f5b040; transform: translateY(-2px); color: var(--ink); }
+
+    .btn-ghost-sf {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: transparent;
+        color: rgba(255,255,255,0.65);
+        font-size: 15px;
+        font-weight: 400;
+        padding: 14px 24px;
+        border-radius: 50px;
+        text-decoration: none;
+        border: 1px solid rgba(255,255,255,0.2);
+        margin-left: 12px;
+        transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost-sf:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+
+    .hero-scroll-indicator {
+        position: absolute;
+        bottom: 28px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        opacity: 0.35;
+    }
+    .scroll-dot {
+        width: 4px; height: 4px; border-radius: 50%; background: #fff;
+        animation: bounce 1.4s infinite;
+    }
+    .scroll-dot:nth-child(2) { animation-delay: 0.2s; }
+    .scroll-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+        0%,80%,100% { opacity:0.3; transform:translateY(0); }
+        40% { opacity:1; transform:translateY(-5px); }
+    }
+
+    /* ── MARQUEE ── */
+    .marquee-band {
+        background: var(--amber);
+        overflow: hidden;
+        padding: 11px 0;
+        white-space: nowrap;
+    }
+    .marquee-track {
+        display: inline-flex;
+        animation: marquee 22s linear infinite;
+    }
+    .marquee-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        padding: 0 36px;
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--ink);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    .marquee-dot { width: 4px; height: 4px; border-radius: 50%; background: rgba(0,0,0,0.3); flex-shrink: 0; }
+    @keyframes marquee { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+
+    /* ── SECTION SHELL ── */
+    .sf-section { padding: 90px 40px; }
+    .sf-section-sm { padding: 60px 40px 90px; }
+    .sf-section-sand { background: var(--sand); }
+    .sf-section-dark { background: var(--teal-deep); }
+
+    .section-tag {
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--teal-bright);
+        display: block;
+        margin-bottom: 14px;
+    }
+    .sf-section-dark .section-tag { color: var(--teal-bright); }
+
+    .section-h {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(2.2rem, 4vw, 3.2rem);
+        font-weight: 700;
+        color: var(--ink);
+        line-height: 1.1;
+    }
+    .section-h em { font-style: italic; color: var(--teal-mid); }
+    .sf-section-dark .section-h { color: #fff; }
+    .sf-section-dark .section-h em { color: var(--amber); }
+
+    .section-lead {
+        font-size: 15px;
+        color: var(--muted);
+        margin-top: 12px;
+        font-weight: 300;
+        line-height: 1.75;
+        max-width: 540px;
+    }
+    .sf-section-dark .section-lead { color: rgba(255,255,255,0.5); }
+
+    /* ── ABOUT ── */
+    .about-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 70px;
+        align-items: center;
+        margin-top: 52px;
+    }
+
+    .about-checks { margin-top: 30px; display: flex; flex-direction: column; gap: 18px; }
+    .check-item { display: flex; align-items: flex-start; gap: 14px; }
+    .check-icon {
+        width: 24px; height: 24px; border-radius: 50%;
+        background: var(--teal-light);
+        display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+    }
+    .check-icon svg { width: 11px; height: 11px; stroke: var(--teal-mid); stroke-width: 2.5; fill: none; }
+    .check-title { font-size: 14px; font-weight: 500; color: var(--ink); }
+    .check-desc { font-size: 12px; color: var(--muted); margin-top: 2px; font-weight: 300; }
+
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .stat-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 28px 20px;
+        border: 1px solid rgba(0,0,0,0.06);
+        text-align: center;
+    }
+    .stat-num {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: var(--teal-mid);
+        line-height: 1;
+    }
+    .stat-label { font-size: 12px; color: var(--muted); margin-top: 8px; letter-spacing: 0.04em; }
+
+    /* ── OFFER STRIP ── */
+    .offer-strip {
+        margin: 0 40px;
+        border-radius: 28px;
+        background: var(--teal-deep);
+        padding: 52px 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+    .offer-strip::before {
+        content: '';
+        position: absolute;
+        width: 400px; height: 400px;
+        border-radius: 50%;
+        background: rgba(26,167,164,0.1);
+        right: -80px; top: -120px;
+        pointer-events: none;
+    }
+    .offer-pill {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        background: rgba(232,160,48,0.15);
+        color: var(--amber);
+        border: 1px solid rgba(232,160,48,0.3);
+        padding: 5px 16px;
+        border-radius: 50px;
+        margin-bottom: 16px;
+    }
+    .offer-strip h3 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.15;
+    }
+    .offer-strip p { font-size: 14px; color: rgba(255,255,255,0.55); margin-top: 10px; font-weight: 300; }
+    .offer-btn {
+        flex-shrink: 0;
+        background: var(--amber);
+        color: var(--ink);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 15px 32px;
+        border-radius: 50px;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+        white-space: nowrap;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .offer-btn:hover { background: #f5b040; transform: translateY(-2px); color: var(--ink); }
+
+    /* ── SERVICES ── */
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 52px; }
+    .service-card {
+        background: #fff;
+        border-radius: 22px;
+        padding: 38px 30px;
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .service-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(7,59,58,0.1); }
+    .svc-icon-wrap {
+        width: 58px; height: 58px; border-radius: 16px;
+        background: var(--teal-light);
+        display: flex; align-items: center; justify-content: center; margin-bottom: 22px;
+    }
+    .svc-icon-wrap svg { width: 26px; height: 26px; stroke: var(--teal-mid); stroke-width: 1.8; fill: none; }
+    .service-card h4 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--ink);
+        margin-bottom: 10px;
+    }
+    .service-card p { font-size: 13px; color: var(--muted); line-height: 1.65; font-weight: 300; }
+
+    /* ── PRODUCTS ── */
+    .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 52px; }
+    .prod-card {
+        background: #fff;
+        border-radius: 22px;
+        overflow: hidden;
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .prod-card:hover { transform: translateY(-6px); box-shadow: 0 16px 36px rgba(7,59,58,0.1); }
+    .prod-top {
+        background: var(--teal-light);
+        height: 120px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 48px;
+        position: relative;
+    }
+    .prod-badge {
+        position: absolute; top: 12px; right: 12px;
+        background: var(--amber);
+        color: var(--ink);
+        font-size: 10px;
+        font-weight: 500;
+        padding: 3px 12px;
+        border-radius: 50px;
+        letter-spacing: 0.06em;
+    }
+    .prod-body { padding: 20px 18px; }
+    .prod-body h5 { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 5px; }
+    .prod-desc { font-size: 12px; color: var(--muted); line-height: 1.5; margin-bottom: 14px; font-weight: 300; }
+    .prod-price {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--teal-mid);
+    }
+    .btn-add-cart {
+        width: 100%;
+        margin-top: 12px;
+        background: var(--teal-deep);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        padding: 10px;
+        font-size: 12px;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+        letter-spacing: 0.03em;
+    }
+    .btn-add-cart:hover { background: var(--teal-mid); }
+
+    /* ── TEAM ── */
+    .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 52px; }
+    .team-card {
+        background: #fff;
+        border-radius: 22px;
+        padding: 38px 26px;
+        text-align: center;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+    .team-avatar {
+        width: 76px; height: 76px;
+        border-radius: 50%;
+        background: var(--teal-light);
+        margin: 0 auto 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--teal-mid);
+    }
+    .team-card h4 { font-size: 16px; font-weight: 500; color: var(--ink); margin-bottom: 5px; }
+    .team-card p { font-size: 13px; color: var(--muted); font-weight: 300; }
+    .team-tag {
+        margin-top: 14px;
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: var(--teal-light);
+        color: var(--teal-mid);
+        padding: 5px 16px;
+        border-radius: 50px;
+    }
+
+    /* ── CONTACT ── */
+    .contact-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; margin-top: 56px; }
+    .contact-info-item {
+        display: flex; align-items: center; gap: 16px;
+        padding: 20px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .contact-info-item:last-child { border-bottom: none; }
+    .ci-icon {
+        width: 44px; height: 44px; border-radius: 13px;
+        background: rgba(26,167,164,0.15);
+        display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .ci-icon svg { width: 18px; height: 18px; stroke: var(--teal-bright); stroke-width: 1.8; fill: none; }
+    .ci-label { font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 3px; }
+    .ci-val { font-size: 14px; color: #fff; }
+
+    .contact-form-wrap {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 22px;
+        padding: 36px;
+    }
+    .cf-field { margin-bottom: 16px; }
+    .cf-field input, .cf-field textarea {
+        width: 100%;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 12px;
+        padding: 14px 18px;
+        color: #fff;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+    .cf-field input::placeholder, .cf-field textarea::placeholder { color: rgba(255,255,255,0.3); }
+    .cf-field input:focus, .cf-field textarea:focus { border-color: rgba(26,167,164,0.5); }
+    .cf-field textarea { resize: none; }
+    .cf-submit {
+        width: 100%;
+        background: var(--amber);
+        color: var(--ink);
+        border: none;
+        border-radius: 12px;
+        padding: 15px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .cf-submit:hover { background: #f5b040; }
+
+    /* ── FOOTER ── */
+    .sf-footer {
+        background: var(--ink);
+        padding: 36px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+    .footer-logo {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #fff;
+    }
+    .footer-logo span { color: var(--amber); }
+    .footer-copy { font-size: 12px; color: rgba(255,255,255,0.3); }
+
+    /* ── CART MODAL ── */
+    .modal-content { border-radius: 20px; border: none; }
+    .modal-header { border-bottom: 1px solid rgba(0,0,0,0.06); padding: 20px 24px; }
+    .modal-body { padding: 24px; }
+    .modal-footer { border-top: 1px solid rgba(0,0,0,0.06); padding: 16px 24px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+        .about-grid, .contact-inner { grid-template-columns: 1fr; }
+        .services-grid, .team-grid { grid-template-columns: 1fr 1fr; }
+        .products-grid { grid-template-columns: 1fr 1fr; }
+        .stats-grid { grid-template-columns: 1fr 1fr; }
+        .offer-strip { flex-direction: column; text-align: center; margin: 0 20px; padding: 36px 28px; }
+        .sf-section, .sf-section-sm { padding: 60px 24px; }
+        .hero { padding: 70px 24px 100px; }
+    }
+
+    @media (max-width: 480px) {
+        .services-grid, .team-grid, .products-grid { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
+    <div class="hero-wave-top"></div>
+
+    <div class="hero-eyebrow">Ocean-to-Table · Dumaguete City, PH</div>
+    <h1>The <em>freshest</em><br>catch on your<br>doorstep.</h1>
+    <p class="hero-sub">Sustainably sourced seafood — delivered in under 2 hours, every time.</p>
+
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:0;">
+        {% if app.user %}
+            <a href="{{ path('app_dashboard') }}" class="btn-primary-sf">
+                Go to Dashboard <i class="fas fa-arrow-right"></i>
+            </a>
+        {% else %}
+            <a href="{{ path('app_login') }}" class="btn-primary-sf">
+                Order Now <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="#about" class="btn-ghost-sf">Learn More</a>
+        {% endif %}
+    </div>
+
+    <div class="hero-scroll-indicator">
+        <div class="scroll-dot"></div>
+        <div class="scroll-dot"></div>
+        <div class="scroll-dot"></div>
+    </div>
+</div>
+
+<!-- MARQUEE BAND -->
+<div class="marquee-band">
+    <div class="marquee-track">
+        <span class="marquee-item">Fresh Daily Catch <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Free Delivery on ₱999+ <span class="marquee-dot"></span></span>
+        <span class="marquee-item">15% Off First Order <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Eco-Friendly Packaging <span class="marquee-dot"></span></span>
+        <span class="marquee-item">24/7 Support <span class="marquee-dot"></span></span>
+        <span class="marquee-item">100% Traceable Sources <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Fresh Daily Catch <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Free Delivery on ₱999+ <span class="marquee-dot"></span></span>
+        <span class="marquee-item">15% Off First Order <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Eco-Friendly Packaging <span class="marquee-dot"></span></span>
+        <span class="marquee-item">24/7 Support <span class="marquee-dot"></span></span>
+        <span class="marquee-item">100% Traceable Sources <span class="marquee-dot"></span></span>
+    </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about" class="sf-section">
+    <span class="section-tag">About Seafoodie</span>
+    <div class="about-grid">
+        <div>
+            <h2 class="section-h">Pure catch,<br><em>no compromise.</em></h2>
+            <p class="section-lead">We partner with local fishermen and sustainable farms across Dumaguete to bring you the highest quality seafood — handled with care from net to your kitchen.</p>
+            <div class="about-checks">
+                <div class="check-item">
+                    <div class="check-icon">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div>
+                        <div class="check-title">24h ocean-to-table promise</div>
+                        <div class="check-desc">From boat to your door, same day.</div>
+                    </div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div>
+                        <div class="check-title">100% traceable sources</div>
+                        <div class="check-desc">Know exactly where your seafood comes from.</div>
+                    </div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div>
+                        <div class="check-title">Eco-friendly packaging</div>
+                        <div class="check-desc">Recyclable, biodegradable materials throughout.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-num">500+</div>
+                <div class="stat-label">Happy Deliveries</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num">4.9</div>
+                <div class="stat-label">Customer Rating</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num">24/7</div>
+                <div class="stat-label">Support</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num">15+</div>
+                <div class="stat-label">Varieties</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- OFFER STRIP -->
+<div class="offer-strip">
+    <div>
+        <div class="offer-pill">Limited Time</div>
+        <h3>Fresh Deals,<br>Every Single Day.</h3>
+        <p>15% off your first order + free delivery when you spend ₱999 or more.</p>
+    </div>
+    {% if app.user %}
+        <a href="{{ path('app_dashboard') }}" class="offer-btn">Shop Now &rarr;</a>
+    {% else %}
+        <a href="{{ path('app_login') }}" class="offer-btn">Claim Offer &rarr;</a>
+    {% endif %}
+</div>
+
+<!-- SERVICES -->
+<section class="sf-section sf-section-sand">
+    <span class="section-tag">What We Offer</span>
+    <h2 class="section-h">Three ways we<br><em>serve you better.</em></h2>
+    <div class="services-grid">
+        <div class="service-card">
+            <div class="svc-icon-wrap">
+                <svg viewBox="0 0 24 24"><path d="M3 18l9-9 9 9"/><path d="M12 9V3"/></svg>
+            </div>
+            <h4>Fresh Catch</h4>
+            <p>Daily sourced straight from local fishermen in Dumaguete waters. You get the ocean's best, every morning.</p>
+        </div>
+        <div class="service-card">
+            <div class="svc-icon-wrap">
+                <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            </div>
+            <h4>Fast Delivery</h4>
+            <p>Ice-packed and insulated, delivered to your door in under 2 hours. Cold chain guaranteed.</p>
+        </div>
+        <div class="service-card">
+            <div class="svc-icon-wrap">
+                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h4>Catering Services</h4>
+            <p>Hosting a party or celebration? We handle bulk seafood orders for events of any size.</p>
+        </div>
+    </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products" class="sf-section">
+    <span class="section-tag">Today's Fresh Picks</span>
+    <h2 class="section-h">Catch of<br><em>the day.</em></h2>
+    <p class="section-lead">Premium selection — sourced this morning, at your door by noon.</p>
+
+    <div class="products-grid">
+        {% if products is defined and products|length > 0 %}
+            {% for product in products %}
+                <div class="prod-card">
+                    <div class="prod-top">
+                        {% if 'prawn' in product.name|lower %}🦐
+                        {% elseif 'lobster' in product.name|lower %}🦞
+                        {% elseif 'fish' in product.name|lower or 'lapu' in product.name|lower %}🐟
+                        {% elseif 'squid' in product.name|lower %}🦑
+                        {% elseif 'crab' in product.name|lower %}🦀
+                        {% else %}🐠
+                        {% endif %}
+                        {% if loop.first %}<span class="prod-badge">Popular</span>{% endif %}
+                    </div>
+                    <div class="prod-body">
+                        <h5>{{ product.name }}</h5>
+                        <p class="prod-desc">{{ product.description|slice(0, 55) }}</p>
+                        <div class="prod-price">₱{{ product.price|number_format(2) }}</div>
+                        {% if app.user %}
+                            <button class="btn-add-cart add-to-cart"
+                                    data-product="{{ product.name }}"
+                                    data-price="{{ product.price }}">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        {% else %}
+                            <a href="{{ path('app_login') }}" class="btn-add-cart" style="text-decoration:none;display:block;text-align:center;">
+                                <i class="fas fa-lock"></i> Login to Order
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12" style="grid-column:1/-1;text-align:center;padding:40px 0;color:var(--muted);">
+                No products available yet. Check back soon!
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- TEAM - ORIGINAL VERSION WITH INITIALS -->
+<section class="sf-section-sm sf-section-sand" style="padding-top:80px;">
+    <span class="section-tag">The Team</span>
+    <h2 class="section-h">Meet the people<br><em>behind the catch.</em></h2>
+    
+    <div class="team-grid">
+        <div class="team-card">
+            <div class="team-avatar">RS</div>
+            <h4>Rona Mae Sotillo</h4>
+            <p>System Manager & Quality Lead</p>
+            <span class="team-tag">Operations</span>
+        </div>
+        <div class="team-card">
+            <div class="team-avatar">AM</div>
+            <h4>anoR eaM</h4>
+            <p>Sourcing Director</p>
+            <span class="team-tag">Sourcing</span>
+        </div>
+        <div class="team-card">
+            <div class="team-avatar">MR</div>
+            <h4>Mae Rona</h4>
+            <p>Logistics Head</p>
+            <span class="team-tag">Delivery</span>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="sf-section sf-section-dark">
+    <span class="section-tag">Get in Touch</span>
+    <h2 class="section-h">Let's talk<br><em>seafood.</em></h2>
+    <p class="section-lead">Inquiries, bulk orders, or just want to say hi — our team is always ready.</p>
+
+    <div class="contact-inner">
+        <div>
+            <div class="contact-info-item">
+                <div class="ci-icon">
+                    <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.6 3.45 2 2 0 0 1 3.57 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.08 6.08l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </div>
+                <div>
+                    <div class="ci-label">Phone</div>
+                    <div class="ci-val">+63 912 345 6789</div>
+                </div>
+            </div>
+            <div class="contact-info-item">
+                <div class="ci-icon">
+                    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <div>
+                    <div class="ci-label">Location</div>
+                    <div class="ci-val">Dumaguete City, Philippines</div>
+                </div>
+            </div>
+            <div class="contact-info-item">
+                <div class="ci-icon">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div>
+                    <div class="ci-label">Hours</div>
+                    <div class="ci-val">24/7 — Always available</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-form-wrap">
+            <form id="contactForm">
+                <div class="cf-field">
+                    <input type="text" placeholder="Your full name" required>
+                </div>
+                <div class="cf-field">
+                    <input type="email" placeholder="Email address" required>
+                </div>
+                <div class="cf-field">
+                    <textarea rows="4" placeholder="Your message..."></textarea>
+                </div>
+                <button type="submit" class="cf-submit">Send Message &nbsp;✈</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<div class="sf-footer">
+    <div class="footer-logo">Sea<span>foodie</span></div>
+    <div class="footer-copy">© {{ "now"|date("Y") }} Seafoodie · Dumaguete City, PH · Ocean-to-table fresh</div>
+</div>
+
+{% if app.user %}
+<!-- Cart Modal -->
+<div class="modal fade" id="cartModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">🛒 Your Cart</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="cartItems"></div>
+                <hr>
+                <h6>Total: ₱<span id="cartTotal">0.00</span></h6>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="checkout()">Checkout</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+{% if app.user %}
+let cart = [];
+
+function addToCart(product, price) {
+    cart.push({ product, price });
+    updateCartDisplay();
+    showToast(product + ' added to cart!');
+}
+
+function showToast(msg) {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = 'position:fixed;bottom:30px;right:30px;background:#0D6E6C;color:#fff;padding:12px 24px;border-radius:50px;font-family:DM Sans,sans-serif;font-size:14px;z-index:9999;transition:opacity 0.4s;box-shadow:0 8px 24px rgba(0,0,0,0.15)';
+    document.body.appendChild(t);
+    setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, 2200);
+}
+
+function updateCartDisplay() {
+    const cartItemsDiv = document.getElementById('cartItems');
+    const cartTotalSpan = document.getElementById('cartTotal');
+    if (!cartItemsDiv) return;
+    if (cart.length === 0) {
+        cartItemsDiv.innerHTML = '<p class="text-muted">Your cart is empty</p>';
+        if (cartTotalSpan) cartTotalSpan.textContent = '0.00';
+        return;
+    }
+    let total = 0;
+    let html = '<div class="list-group">';
+    cart.forEach((item, i) => {
+        total += item.price;
+        html += `<div class="list-group-item d-flex justify-content-between align-items-center">
+            <span>${item.product}</span>
+            <span class="fw-bold">₱${parseFloat(item.price).toFixed(2)}</span>
+            <button class="btn btn-sm btn-outline-danger ms-2" onclick="removeFromCart(${i})">×</button>
+        </div>`;
+    });
+    html += '</div>';
+    cartItemsDiv.innerHTML = html;
+    if (cartTotalSpan) cartTotalSpan.textContent = total.toFixed(2);
+}
+
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    updateCartDisplay();
+}
+
+function checkout() {
+    if (cart.length === 0) { alert('Your cart is empty!'); return; }
+    const total = cart.reduce((s, i) => s + i.price, 0);
+    alert('Order placed! Total: ₱' + total.toFixed(2) + '. Thank you for shopping with Seafoodie!');
+    cart = [];
+    updateCartDisplay();
+    setTimeout(() => {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('cartModal'));
+        if (modal) modal.hide();
+    }, 1500);
+}
+
+document.querySelectorAll('.add-to-cart').forEach(btn => {
+    btn.addEventListener('click', function() {
+        addToCart(this.dataset.product, parseFloat(this.dataset.price));
+    });
+});
+{% endif %}
+
+document.getElementById('contactForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    alert('✨ Message sent! Our team will get back to you soon.');
+    this.reset();
+});
+</script>
+{% endblock %}

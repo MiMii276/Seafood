@@ -1,0 +1,21 @@
+FROM php:8.3-fpm
+
+# Update package lists and install basic system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    libzip-dev \
+    libicu-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install and configure PHP extensions for Dev
+RUN docker-php-ext-configure intl \
+    && docker-php-ext-install \
+    pdo_mysql \
+    mysqli \
+    intl \
+    zip \
+    opcache
+
+# Set working directory
+WORKDIR /var/www/html

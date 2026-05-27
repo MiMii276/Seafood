@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Repository\ActivityLogRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -51,5 +53,39 @@ class ActivityLogController extends AbstractController
             'filter_action' => $filterAction,
             'filter_date' => $filterDate,
         ]);
+    }
+
+    #[Route('/clear', name: 'clear_activity_logs', methods: ['POST'])]
+    public function clearLogs(EntityManagerInterface $entityManager, ActivityLogRepository $activityLogRepository): JsonResponse
+    {
+        try {
+            // Option 1: Delete all logs using Doctrine
+            $logs = $activityLogRepository->findAll();
+            
+            foreach ($logs as $log) {
+                $entityManager->remove($log);
+            }
+            
+            $entityManager->flush();
+            
+            // Option 2: If you want to use TRUNCATE (faster but bypasses events)
+            // $connection = $entityManager->getConnection();
+            // $connection->executeStatement('TRUNCATE TABLE activity_log');
+            
+            // Log this action (optional)
+            $this->addFlash('success', 'All activity logs have been cleared successfully!');
+            
+            return $this->json([
+                'success' => true,
+                'message' => 'All activity logs have been cleared successfully!',
+                'count' => count($logs)
+            ]);
+            
+        } catch (\Exception $e) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Failed to clear activity logs: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

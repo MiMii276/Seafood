@@ -20,7 +20,8 @@ class ActivityLogger
         $this->session = $requestStack->getSession();
     }
 
-    private function log(User $user, string $action, string $targetData): void
+    // Make this PUBLIC so GoogleAuthenticator can call it
+    public function log(User $user, string $action, string $targetData): void
     {
         $log = new ActivityLog();
         $log->setUserId($user->getId());
@@ -30,58 +31,50 @@ class ActivityLogger
         $log->setTargetData($targetData);
 
         $this->entityManager->persist($log);
+        $this->entityManager->flush(); // Add flush here
     }
 
     public function logLogin(User $user): void
     {
-        if (!$this->session->has('login_logged')) {
-            $this->log($user, 'LOGIN', 'User logged in');
-            $this->entityManager->flush();
-            $this->session->set('login_logged', true);
-        }
+        // Remove session check to always log Google logins
+        $this->log($user, 'LOGIN', 'User logged in');
+        $this->session->set('login_logged', true);
     }
 
     public function logLogout(User $user): void
     {
         $this->log($user, 'LOGOUT', 'User logged out');
-        $this->entityManager->flush();
         $this->session->remove('login_logged');
     }
 
     public function logProductCreate(User $user, Product $product): void
     {
         $this->log($user, 'CREATE PRODUCT', 'Created product: ' . $product->getName());
-        $this->entityManager->flush();
     }
 
     public function logProductUpdate(User $user, Product $product): void
     {
         $this->log($user, 'UPDATE PRODUCT', 'Updated product: ' . $product->getName());
-        $this->entityManager->flush();
     }
 
     public function logProductDelete(User $user, string $name, int $id): void
     {
         $this->log($user, 'DELETE PRODUCT', "Deleted product: $name (ID: $id)");
-        $this->entityManager->flush();
     }
 
     public function logUserCreate(User $admin, User $user): void
     {
         $this->log($admin, 'CREATE USER', 'Created user: ' . $user->getEmail());
-        $this->entityManager->flush();
     }
 
     public function logUserUpdate(User $admin, User $user): void
     {
         $this->log($admin, 'UPDATE USER', 'Updated user: ' . $user->getEmail());
-        $this->entityManager->flush();
     }
 
     public function logUserDelete(User $admin, User $user): void
     {
         $this->log($admin, 'DELETE USER', 'Deleted user: ' . $user->getEmail());
-        $this->entityManager->flush();
     }
 
     // === Catering logging methods ===
@@ -89,18 +82,15 @@ class ActivityLogger
     public function logCateringCreate(User $user, Catering $catering): void
     {
         $this->log($user, 'CREATE CATERING', 'Created catering: ' . $catering->getName());
-        $this->entityManager->flush();
     }
 
     public function logCateringUpdate(User $user, Catering $catering): void
     {
         $this->log($user, 'UPDATE CATERING', 'Updated catering: ' . $catering->getName());
-        $this->entityManager->flush();
     }
 
     public function logCateringDelete(User $user, Catering $catering): void
     {
         $this->log($user, 'DELETE CATERING', 'Deleted catering: ' . $catering->getName() . ' (ID: ' . $catering->getId() . ')');
-        $this->entityManager->flush();
     }
 }
